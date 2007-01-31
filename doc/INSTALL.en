@@ -1,0 +1,83 @@
+= Installation Guide
+
+== Requirements
+
+Ruby/GD requires version 1.6.0 or later of the gd library, and
+Ruby-1.4.0 or later.
+
+The latest version of gd is available from:
+http://www.boutell.com/gd/
+
+The latest version of Ruby is available from:
+http://www.ruby-lang.org/
+
+To build the extension library, at least the following libraries 
+must be correctly installed in your system.
+
+* libpng
+* zlib
+
+= Install
+
+1. To generate the Makefile with which Ruby/GD is build, issue this
+   command from your prompt:
+
+   ruby extconf.rb [options...] 
+
+   The following options can be specified:
+   
+   * --with-xpm
+
+   If your gd has support for XPM format images, add this option. Note
+   that libX11 and libXpm must be correctly installed in your system.
+   
+   * --with-ttf
+
+   If your gd has support for TrueType fonts, add this option. Note that
+   Freetype library must be correctly installed in your system.
+
+   * --with-freetype
+
+   If you want use the newest feature of font rendering provided by 
+   gd-1.8.4, add this option along with '--with-ttf'. 
+   Note that Freetype library must be correctly installed in your system. 
+
+   * --with-jpeg
+
+   If your gd has support for JPEG format images, add this option. Note that
+   libjpeg-6b or later must be correctly installed in your system.
+
+   * --with-gd-include=[dir], --with-gd-lib=[dir]
+
+   You can specify explicitly the location in which gd library is
+   installed.
+
+   EXAMPLE
+   the case libgd.a and header files exist in "/home/foo/gd-1.8.4":
+   
+   $ ruby extconf.rb --with-gd-include=/home/foo/gd-1.8.4 --with-gd-lib=/home/foo/gd-1.8.4
+
+   * --enable-gd2_0
+
+   If you want to use the newest features (support for truecolor
+   images, alpha channels, etc.) provided by gd-2.0.x from Ruby/GD, 
+   add this option. gd-2.0.x must be correctly installed on your system.
+
+2. Build the extension library
+
+   issue this command:
+
+   $ make
+
+   If successful, the library named "GD.so" is generated.
+
+3. Install in your system
+
+   type (if needed, as superuser)
+
+   # make install
+   or, 
+   # make site-install
+
+   and GD.so will be correctly installed in your system. This finishes
+   the installation.

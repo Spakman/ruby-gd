@@ -1,0 +1,54 @@
+= Changes from 0.7.3
+
+* doc/gd-intro_ja.html, doc/imgs/* : removed. 
+* extconf.rb : new option '--enable-gd2_0' added to support for gd-2.0.1(beta).
+* GD::Image#newTrueColor, GD::Image#colorAllocateAlpha,
+  GD::Image#colorResolveAlpha, GD::Image#colorClosestAlpha,
+  GD::Image#colorExactAlpha, GD::Image#alphaBlending,
+  GD::Image#alpha, GD::Image#trueColor, GD::Image#trueColorAlpha,
+  GD::Image#copyResampled, GD::Image#filledEllipse, GD::Image#filledArc
+  - new methods. They are for the new features of gd-2.0.1(beta).
+  Accordingly, GD#Image.newPalette is an alias for GD::Image#new.
+* doc/manual.rd: documentation update.
+
+= Changes from 0.7.2
+
+* Fixed typos and grammer mistakes in English documents. I thank Neil Conway for
+  sending this patch.
+
+* GD::Image.stringFT, GD::Image#stringFT: should call gdImageStringFT(), not
+  gdImageStringTTF()!!! I'm sorry. Thanks to YOKOKAWA Takehiro(tac@amris.co.jp).
+
+* GD::Image#JpegStr, GD::Image#PngStr: new method. 
+  Thanks to Colin Steele(colin@webg2.com).
+
+= Changes from 0.7.1
+
+* extconf.rb: updated for gd-1.8.4. 
+
+* GD.c: GD::Image.stringFT, GD::Image#stringFT: new methods. Note these methods
+  requires the newest feature of gd-1.8.4.
+
+* extconf.rb, GD.c: should check GD::Image#colorResolve and GD::Image#stringTTF
+  separately. Thanks to Tosh.
+
+* GD.c: added new constants GD::GD2_FMT_COMPRESSED, GD::GD2_FMT_RAW.
+  (GD::Image::GD2_FMT_COMPRESSED, etc. is more adequate???)
+  
+* GD.c: rb_str_hex():removed. rb_funcall() is utilized instead. Now works 
+  correctly for Ruby-1.4.x.
+
+* readme.rd: description for GD::Image#gd2 corrected. Thanks to nnakamura.
+
+* gd-intro_ja.html: copyright notice for some images. updated.
+
+= Changes from 0.7.0
+
+* GD.c(GD::Image#colorAllocate, GD::Image#colorExact): the return values
+  conformable to those of the original gd library. 
+
+* GD::Image#colorAllocate, GD::Image#colorResolve, GD::Image#colorClosest,
+  GD::Image#colorClosestHWB, GD::Image#colorExact : allow for the string 
+  like "#FF0000"(stands for "red") as an argument.
+  
+* doc/gd_intro-ja.html: corrected and updated. Thanks to Tosh.

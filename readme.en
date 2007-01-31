@@ -1,0 +1,55 @@
+= Ruby/GD 0.7.4
+
+An extension library to use Thomas Boutell's gd graphics library from
+Ruby.  You can create PNG or JPEG images with your Ruby script.
+
+Ruby/GD requires gd library with PNG support(i.e. the version 1.6 or
+later). See 'doc/INSTALL.en' for detail.
+
+The latest version is available from:
+http://kirara.prec.kyoto-u.ac.jp/~tam/GD/
+
+Ruby/GD is formerly known as "GD", originally written and maintained
+by Yukihiro "matz" Matsumoto (matz@ruby-lang.org). From this release
+of 0.7.0, Ruby/GD is maintained by Ryuichi Tamura (tam@kais.kyoto-u.ac.jp).
+
+== Changes from the version 0.6.2
+
+* GIF I/O are no longer supported. You can use PNG I/O instead.
+* Support for API provided by the newest version of gd (gd-1.8.4). 
+
+== Contents
+
+readme.en            this file
+readme.ja            Japanese version of this file
+extconf.rb           ruby script generating Makefile for this extension library
+GD.c                 source file
+
+doc/INSTALL.en       how to install (in English)
+doc/INSTALL.ja       how to install (in Japanese)
+doc/manual.rd        Reference manual written with RD format
+doc/manual.html      manual converted into HTML
+
+sample/example.rb    sample script to show the basic usage of Ruby/GD library
+sample/gdtestttf.rb  translated Ruby script from gdtestttf.c
+sample/gdtestttf.png ./gdtestttf.rb > gdtestttf.png
+sample/webpng.rb     translated Ruby script from webpng.c
+
+== Install
+
+see 'doc/INSTALL.en'
+
+== Reference
+
+see 'doc/manual.html'
+
+== Licence
+
+Ruby Libraru Licence
+
+== Maintainer
+
+Ryuichi Tamura (tam@kais.kyoto-u.ac.jp)
+
+Bug reports, comments, suggestions to this maintainer are welcome, but
+ruby-talk mailing list would be the best place for discussion :-).

@@ -1,0 +1,891 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html 
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>manual</title>
+</head>
+<body>
+<h1><a name="label:0" id="label:0">Ruby/GD Version 0.7.4</a></h1><!-- RDLabel: "Ruby/GD Version 0.7.4" -->
+<p>Ruby extension library for using Thomas Boutell's gd
+library(http://www.boutell.com/gd/).</p>
+<p>Originally written by Yukihiro Matsumoto (matz@ruby-lang.org)</p>
+<p>Current maintainer: Ryuichi Tamura (tam@kais.kyoto-u.ac.jp)</p>
+<p><em> If gd-2.0.x is installed in your system, and Ruby/GD is compiled
+with <code>--enable-gd2_0</code> option, you can use those constants or
+methods described in the subsection "gd-2.0.0 or higher"</em></p>
+<h2><a name="label:1" id="label:1">Module/Class Hierarchy</a></h2><!-- RDLabel: "Module/Class Hierarchy" -->
+<pre>GD -+
+    |
+    +- GD::Image
+    |
+    +- GD::Polygon
+    |
+    +- GD::Font</pre>
+<h1><a name="label:2" id="label:2">Module GD</a></h1><!-- RDLabel: "Module GD" -->
+<p>Module that defines some constants refered by GD::Image or GD::Polygon
+instances.</p>
+<h2><a name="label:3" id="label:3">Constants</a></h2><!-- RDLabel: "Constants" -->
+<dl>
+<dt><a name="label:4" id="label:4"><code>GD::Brushed</code></a><!-- RDLabel: "GD::Brushed" -->
+</dl>
+<p>If this constant is used as the color when invoking a line-drawing
+method such as <a href="#label:67">GD::Image#line</a> or <a href="#label:69">GD::Image#rectangle</a>, the
+line to be drawn is the brush image that has been set with
+<a href="#label:70">GD::Image#setBrush</a>.</p>
+<dl>
+<dt><a name="label:5" id="label:5"><code>GD::Styled</code></a><!-- RDLabel: "GD::Styled" -->
+</dl>
+<p>If this constant is used as the color when invoking a line-drawing
+method such as <a href="#label:67">GD::Image#line</a> or <a href="#label:69">GD::Image#rectangle</a>, the
+colors of the pixels are drawn successively from the style that has
+been set with <a href="#label:72">GD::Image#setStyle</a>. If the color of a pixel is
+equal to <a href="#label:8">GD::Transparent</a>, that pixel is not altered.</p>
+<dl>
+<dt><a name="label:6" id="label:6"><code>GD::StyledBrushed</code></a><!-- RDLabel: "GD::StyledBrushed" -->
+</dl>
+<p>If this constant is used as the color when invoking a line-drawing
+method such as <a href="#label:67">GD::Image#line</a> or <a href="#label:69">GD::Image#rectangle</a>, the
+brush set with <a href="#label:70">GD::Image#setBrush</a> is drawn wherever the color
+specified in <a href="#label:72">GD::Image#setStyle</a> is neither zero nor
+<a href="#label:8">GD::Transparent</a>.</p>
+<dl>
+<dt><a name="label:7" id="label:7"><code>GD::Tiled</code></a><!-- RDLabel: "GD::Tiled" -->
+</dl>
+<p>If this constant is used as the color when invoking a filling method
+such as <a href="#label:65">GD::Image#filledRectangle</a>,
+<a href="#label:64">GD::Image#filledPolygon</a>, <a href="#label:63">GD::Image#fill</a>, and
+<a href="#label:66">GD::Image#fillToBorder</a>. The area is filled with a tile image set
+with <a href="#label:73">GD::Image#setTile</a>.</p>
+<dl>
+<dt><a name="label:8" id="label:8"><code>GD::Transparent</code></a><!-- RDLabel: "GD::Transparent" -->
+</dl>
+<p>Used in place of a normal color in a style to be set with
+<a href="#label:72">GD::Image#setStyle</a>. This constant is not the transparent color
+index of the image; for that functionality, see
+<a href="#label:59">GD::Image#transparent</a>.</p>
+<dl>
+<dt><a name="label:9" id="label:9"><code>GD::GD2_FMT_COMPRESSED</code></a><!-- RDLabel: "GD::GD2_FMT_COMPRESSED" -->
+</dl>
+<p>specifies Gd2 image to be compressed. This constant is used in
+<a href="#label:102">GD::Image#gd2</a>.</p>
+<dl>
+<dt><a name="label:10" id="label:10"><code>GD::GD2_FMT_RAW</code></a><!-- RDLabel: "GD::GD2_FMT_RAW" -->
+</dl>
+<p>specifies Gd2 image to be uncompressed. This constant is used in
+<a href="#label:102">GD::Image#gd2</a>.</p>
+<h3><a name="label:11" id="label:11">gd-2.0.0 or higher</a></h3><!-- RDLabel: "gd-2.0.0 or higher" -->
+<dl>
+<dt><a name="label:12" id="label:12"><code>GD::AlphaTransparent</code></a><!-- RDLabel: "GD::AlphaTransparent" -->
+<dt><a name="label:13" id="label:13"><code>GD::AlphaOpaque</code></a><!-- RDLabel: "GD::AlphaOpaque" -->
+</dl>
+<p>These constants are used in <a href="#label:45">GD::Image.trueColorAlpha</a>, and each
+defines the upper(127) and lower(0) bounds of alpha channel value,
+respectively. Full transparency corresponds to GD::AlphaTransparent.</p>
+<dl>
+<dt><a name="label:14" id="label:14"><code>GD::Arc</code></a><!-- RDLabel: "GD::Arc" -->
+<dt><a name="label:15" id="label:15"><code>GD::Chord</code></a><!-- RDLabel: "GD::Chord" -->
+<dt><a name="label:16" id="label:16"><code>GD::Pie</code></a><!-- RDLabel: "GD::Pie" -->
+<dt><a name="label:17" id="label:17"><code>GD::NoFill</code></a><!-- RDLabel: "GD::NoFill" -->
+<dt><a name="label:18" id="label:18"><code>GD::Edged</code></a><!-- RDLabel: "GD::Edged" -->
+</dl>
+<p>These constants become options that specify how an arc is drawn with
+using <a href="#label:123">GD::Image#filledArc</a>. See also <a href="#label:123">GD::Image#filledArc</a>.</p>
+<h1><a name="label:19" id="label:19">Class GD::Image</a></h1><!-- RDLabel: "Class GD::Image" -->
+<h2><a name="label:20" id="label:20">Class Methods</a></h2><!-- RDLabel: "Class Methods" -->
+<h5><a name="label:21" id="label:21">Instance Creation</a></h5><!-- RDLabel: "Instance Creation" -->
+<dl>
+<dt><a name="label:22" id="label:22"><code>GD::Image.new(<var>width</var>, <var>height</var>)</code></a><!-- RDLabel: "GD::Image.new" -->
+</dl>
+<p>creates a new palette image instance with specified <var>width</var> and
+<var>height</var>.</p>
+<dl>
+<dt><a name="label:23" id="label:23"><code>GD::Image.newFromGd(<var>file</var>)</code></a><!-- RDLabel: "GD::Image.newFromGd" -->
+</dl>
+<p>creates a new image instance from Gd file. <var>file</var> is a File
+object.</p>
+<dl>
+<dt><a name="label:24" id="label:24"><code>GD::Image.new_from_gd(<var>filename</var>)</code></a><!-- RDLabel: "GD::Image.new_from_gd" -->
+</dl>
+<p>creates a new Gd image instance from <var>filename</var>. <var>filename</var>
+is a String object which specifies the localtion of the image file.</p>
+<dl>
+<dt><a name="label:25" id="label:25"><code>GD::Image.newFromGd2(<var>file</var>)</code></a><!-- RDLabel: "GD::Image.newFromGd2" -->
+</dl>
+<p>creates a new image instance from Gd2 file. <var>file</var> is a File
+object.</p>
+<dl>
+<dt><a name="label:26" id="label:26"><code>GD::Image.new_from_gd2(<var>filename</var>)</code></a><!-- RDLabel: "GD::Image.new_from_gd2" -->
+</dl>
+<p>creates a new Gd2 image instance from <var>filename</var>. <var>filename</var>
+is a String object which specifies the location of the image file.</p>
+<dl>
+<dt><a name="label:27" id="label:27"><code>GD::Image.newFromGd2Part(<var>file</var>, <var>srcX</var>, <var>srcY</var>, <var>width</var>, <var>height</var>)</code></a><!-- RDLabel: "GD::Image.newFromGd2Part" -->
+</dl>
+<p>creates a new image instance from part of Gd2 file. <var>file</var> is a
+File object.</p>
+<dl>
+<dt><a name="label:28" id="label:28"><code>GD::Image.new_from_gd2_part(<var>filename</var>)</code></a><!-- RDLabel: "GD::Image.new_from_gd2_part" -->
+</dl>
+<p>creates a new Gd2 image instance from <var>filename</var>. <var>filename</var>
+is a String object which specifies the location of the image file.</p>
+<dl>
+<dt><a name="label:29" id="label:29"><code>GD::Image.newFromJpeg(<var>file</var>)</code></a><!-- RDLabel: "GD::Image.newFromJpeg" -->
+</dl>
+<p>(gd-1.8 or later)</p>
+<p>Creates a new image instance from JPEG file. <var>file</var> is a File
+object.</p>
+<dl>
+<dt><a name="label:30" id="label:30"><code>GD::Image.new_from_jpeg(<var>filename</var>)</code></a><!-- RDLabel: "GD::Image.new_from_jpeg" -->
+</dl>
+<p>creates a new Jpeg image instance from <var>filename</var>. <var>filename</var>
+is a String object which specifies the location of the image file.</p>
+<dl>
+<dt><a name="label:31" id="label:31"><code>GD::Image.newFromPng(<var>file</var>)</code></a><!-- RDLabel: "GD::Image.newFromPng" -->
+</dl>
+<p>creates a new image instance from PNG file. <var>file</var> is a File
+object.</p>
+<dl>
+<dt><a name="label:32" id="label:32"><code>GD::Image.new_from_png(<var>filename</var>)</code></a><!-- RDLabel: "GD::Image.new_from_png" -->
+</dl>
+<p>creates a new PNG image instance from <var>filename</var>. <var>filename</var>
+is a String object which specifies the location of the image file.</p>
+<dl>
+<dt><a name="label:33" id="label:33"><code>GD::Image.newFromXbm(<var>file</var>)</code></a><!-- RDLabel: "GD::Image.newFromXbm" -->
+</dl>
+<p>creates a new image instance from Xbm file. <var>file</var> is a File
+object.</p>
+<dl>
+<dt><a name="label:34" id="label:34"><code>GD::Image.new_from_xbm(<var>filename</var>)</code></a><!-- RDLabel: "GD::Image.new_from_xbm" -->
+</dl>
+<p>creates a new XBitmap image instance from
+<var>filename</var>. <var>filename</var> is a String object which specifies the
+location of the image file.</p>
+<dl>
+<dt><a name="label:35" id="label:35"><code>GD::Image.newFromXpm(<var>file</var>)</code></a><!-- RDLabel: "GD::Image.newFromXpm" -->
+</dl>
+<p>(gd-1.7 or later)</p>
+<p>creates a new image instance from Xpm file. <var>file</var> is a File
+object.</p>
+<dl>
+<dt><a name="label:36" id="label:36"><code>GD::Image.new_from_xpm(<var>filename</var>)</code></a><!-- RDLabel: "GD::Image.new_from_xpm" -->
+</dl>
+<p>creates a new XPixmaps image instance from
+<var>filename</var>. <var>filename</var> is a String object which specifies the
+location of the image file.</p>
+<h5><a name="label:37" id="label:37">Query</a></h5><!-- RDLabel: "Query" -->
+<dl>
+<dt><a name="label:38" id="label:38"><code>GD::Image.stringTTF(<var>fg_color</var>, <var>fnt_name</var>, <var>pt</var>, <var>angle</var>, <var>x</var>, <var>y</var>, <var>str</var>)</code></a><!-- RDLabel: "GD::Image.stringTTF" -->
+</dl>
+<p>(gd-1.6.1 or later) </p>
+<p>Tries to find the bounding rectangle of <var>str</var> with size (<var>pt</var>)
+and the name of the TrueType font(<var>fnt_name</var>), and returns the
+array consists of the error message string and the array of each
+vertex of the rectangle(brect[8], see the figure in the section of
+<a href="#label:85">GD::Image#stringTTF</a>). If successful, the error message is
+<a name="index:0" id="index:0">nil</a>. See also <a href="#label:85">GD::Image#stringTTF</a>.</p>
+<dl>
+<dt><a name="label:39" id="label:39"><code>GD::Image.stringFT(<var>fg_color</var>, <var>fnt_name</var>, <var>pt</var>, <var>angle</var>, <var>x</var>, <var>y</var>, <var>str</var>)</code></a><!-- RDLabel: "GD::Image.stringFT" -->
+</dl>
+<p>(gd-1.8.4) </p>
+<p>This method provides the same functionarity as
+<a href="#label:38">GD::Image.stringTTF</a> does, but uses FreeType2 library when
+redering the string. See also <a href="#label:86">GD::Image#stringFT</a></p>
+<h3><a name="label:11" id="label:11">gd-2.0.0 or higher</a></h3><!-- RDLabel: "gd-2.0.0 or higher" -->
+<dl>
+<dt><a name="label:41" id="label:41"><code>GD::Image.newTrueColor(<var>width</var>, <var>height</var>)</code></a><!-- RDLabel: "GD::Image.newTrueColor" -->
+</dl>
+<p>Creates a new truecolor image instance with specified <var>width</var> and
+<var>height</var>.</p>
+<dl>
+<dt><a name="label:42" id="label:42"><code>GD::Image.trueColor(<var>r</var>, <var>g</var>, <var>b</var>)</code></a><!-- RDLabel: "GD::Image.trueColor" -->
+<dt><a name="label:42" id="label:42"><code>GD::Image.trueColor(<var>rgbstr</var>)</code></a><!-- RDLabel: "GD::Image.trueColor" -->
+</dl>
+<p>returns the RGBA color value for drawing on a truecolor image, or an
+image created by <a href="#label:41">GD::Image.newTrueColor</a>. <var>r</var>, <var>g</var>,
+<var>b</var> values are in the range between 0 and 255.  Or, you can
+specify it by <var>rgbstr</var> which is in the range between "#000000" and
+"#FFFFFF".</p>
+<dl>
+<dt><a name="label:42" id="label:42"><code>GD::Image.trueColor(<var>r</var>, <var>g</var>, <var>b</var>, <var>alpha</var>)</code></a><!-- RDLabel: "GD::Image.trueColor" -->
+<dt><a name="label:45" id="label:45"><code>GD::Image.trueColorAlpha(<var>rgbstr</var>, <var>alpha</var>)</code></a><!-- RDLabel: "GD::Image.trueColorAlpha" -->
+</dl>
+<p>returns the RGBA color value for drawing on a truecolor image, or an
+image created by <a href="#label:41">GD::Image.newTrueColor</a> with alpha channel
+transparency. Because gd has 7-bit alpha channel, the <var>alpha</var>
+value takes between 0(opaque) and 127(transparent).</p>
+<p>These class methods are used for <em>truecolor</em> images. If you want
+to specify alpha value for <em>palette</em> images, use
+<a href="#label:110">GD::Image#colorAllocateAlpha</a>, <a href="#label:112">GD::Image#colorExactAlpha</a>,
+<a href="#label:114">GD::Image#colorClosestAlpha</a>, or
+<a href="#label:116">GD::Image#colorResolveAlpha</a> instead.</p>
+<h2><a name="label:46" id="label:46">Methods</a></h2><!-- RDLabel: "Methods" -->
+<dl>
+<dt><a name="label:47" id="label:47"><code>GD::Image#destroy</code></a><!-- RDLabel: "GD::Image#destroy" -->
+</dl>
+<p>Free the memory associated with the image instance.</p>
+<dl>
+<dt><a name="label:48" id="label:48"><code>GD::Image#interlace=(<var>val</var>)</code></a><!-- RDLabel: "GD::Image#interlace=" -->
+</dl>
+<p>If <var>val</var> is <!-- Index, but conflict -->true<!-- Index end -->, the image is interlaced. Otherwise and by
+default, the image is not interlaced.</p>
+<h3><a name="label:49" id="label:49">Color Handling</a></h3><!-- RDLabel: "Color Handling" -->
+<dl>
+<dt><a name="label:50" id="label:50"><code>GD::Image#colorAllocate(<var>r</var>, <var>g</var>, <var>b</var>)</code></a><!-- RDLabel: "GD::Image#colorAllocate" -->
+<dt><a name="label:50" id="label:50"><code>GD::Image#colorAllocate(<var>str</var>)</code></a><!-- RDLabel: "GD::Image#colorAllocate" -->
+</dl>
+<p>Finds the first available color index in the image instance, and sets
+its RGB values to <var>r</var>, <var>g</var>, <var>b</var>, respectively and returns
+the index of the new color table entry. <var>r</var>, <var>g</var>, <var>b</var> take
+a value between 0 and 255. Also, if you use Ruby-1.6.0 or later, you
+can specify a color as strings like "#FF00FF".</p>
+<p>Note that the first time you invoke this method after creating a new
+image by <a href="#label:22">GD::Image.new</a>, <em>the background color</em> of the image
+is set.</p>
+<p>You can allocate upto 256 colors to one image. If there is no space to
+allocate the requested color, this returns -1.</p>
+<p>If you use gd-1.6.2 or later, you can use
+<a href="#label:57">GD::Image#colorResolve</a>, more robust way of color allocation.</p>
+<dl>
+<dt><a name="label:52" id="label:52"><code>GD::Image#colorClosest(<var>r</var>, <var>g</var>, <var>b</var>)</code></a><!-- RDLabel: "GD::Image#colorClosest" -->
+<dt><a name="label:52" id="label:52"><code>GD::Image#colorClosest(<var>str</var>)</code></a><!-- RDLabel: "GD::Image#colorClosest" -->
+</dl>
+<p>Searches the colors which have been defined thus far in the image
+instance and returns the index of the color with RGB values closest to
+<var>r</var>, <var>g</var>, <var>b</var>, respectively. Also, if you use Ruby-1.6.0
+or later, you can specify a color as strings like "#FF00FF".If no
+color have been yet allocated to that image, this returns -1</p>
+<p>This method is useful when a image instance which you want to allocate
+a new color is created from the image scanned from a photograph in
+which many colors will be used.</p>
+<dl>
+<dt><a name="label:54" id="label:54"><code>GD::Image#colorDeallocate(<var>color</var>)</code></a><!-- RDLabel: "GD::Image#colorDeallocate" -->
+</dl>
+<p>This marks the <var>color</var> at the specified index as being ripe for
+reallocation.  The next time <a href="#label:50">GD::Image#colorAllocate</a> is used,
+this entry will be replaced.  You can call this method several times
+to deallocate multiple colors.</p>
+<dl>
+<dt><a name="label:55" id="label:55"><code>GD::Image#colorExact(<var>r</var>, <var>g</var>, <var>b</var>)</code></a><!-- RDLabel: "GD::Image#colorExact" -->
+<dt><a name="label:55" id="label:55"><code>GD::Image#colorExact(<var>str</var>)</code></a><!-- RDLabel: "GD::Image#colorExact" -->
+</dl>
+<p>Searches the colors which have been defined thus far in the image
+instance and returns the index of the first color with RGB values
+which exactly match (<var>r</var>, <var>g</var>, <var>b</var>). If no allocated color
+matches the request precisely, this returns -1. Also, if you use
+Ruby-1.6.0 or later, you can specify a color as strings like
+"#FF00FF".</p>
+<dl>
+<dt><a name="label:57" id="label:57"><code>GD::Image#colorResolve(<var>r</var>, <var>g</var>, <var>b</var>)</code></a><!-- RDLabel: "GD::Image#colorResolve" -->
+<dt><a name="label:57" id="label:57"><code>GD::Image#colorResolve(<var>str</var>)</code></a><!-- RDLabel: "GD::Image#colorResolve" -->
+</dl>
+<p>(gd-1.6.2 or later)</p>
+<p>Searches the colors which have been defined thus far in the image
+specified and returns the index of the first color with RGB values
+which exactly match those of the request. Also, if you use Ruby-1.6.0
+or later, you can specify a color as strings like "#FF00FF".</p>
+<p>If no allocated color matches the request precisely, then this method
+tries to allocate the exact color.If there is no space left in the
+color table then this method returns the closest color (as in
+<a href="#label:52">GD::Image#colorClosest</a>).</p>
+<p>Unlike <a href="#label:50">GD::Image#colorAllocate</a>, this method always returns an
+index of a color.</p>
+<dl>
+<dt><a name="label:59" id="label:59"><code>GD::Image#transparent(<var>idx</var>)</code></a><!-- RDLabel: "GD::Image#transparent" -->
+</dl>
+<p>Sets the transparent color index for the specified image to the
+specified color index <var>idx</var>. To indicate that there should be no
+transparent color, set <var>idx</var> to -1. </p>
+<p>Note that JPEG images <em>do not support</em> transparency, so this
+setting has no effect when writing JPEG images.</p>
+<h5><a name="label:60" id="label:60">Drawing and Filling</a></h5><!-- RDLabel: "Drawing and Filling" -->
+<dl>
+<dt><a name="label:61" id="label:61"><code>GD::Image#arc(<var>cx</var>, <var>cy</var>, <var>width</var>, <var>height</var>, <var>start</var>, <var>end</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#arc" -->
+</dl>
+<p>Draw a partial ellipse centered at the given point (<var>cx</var>,<var>cy</var>)
+with specified width <var>width</var> and height <var>height</var> in pixel with
+specified <var>color</var>.  The arc begins at the position in degrees
+specified by <var>start</var> and ends at the position specified by
+<var>end</var>.</p>
+<dl>
+<dt><a name="label:62" id="label:62"><code>GD::Image#dashedLine(<var>x1</var>, <var>y1</var>, <var>x2</var>, <var>y2</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#dashedLine" -->
+</dl>
+<p>This method is provided solely for backwards compatibility of the
+Boutell's gd library. When drawing a dashed line, new programs should
+use <a href="#label:67">GD::Image#line</a> with <a href="#label:72">GD::Image#setStyle</a>.</p>
+<dl>
+<dt><a name="label:63" id="label:63"><code>GD::Image#fill(<var>x</var>, <var>y</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#fill" -->
+</dl>
+<p>Flood a portion of the image with the specified <var>color</var>, beginning
+at the specified point (<var>x</var>,<var>y</var>) and flooding the surrounding
+region of the same color as the starting point. See also
+<a href="#label:66">GD::Image#fillToBorder</a>.</p>
+<dl>
+<dt><a name="label:64" id="label:64"><code>GD::Image#filledPolygon(<var>points</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#filledPolygon" -->
+</dl>
+<p>Draw a filled polygon with the verticies specified, using the
+<var>color</var> index specified. see also <a href="#label:68">GD::Image#polygon</a>.</p>
+<dl>
+<dt><a name="label:65" id="label:65"><code>GD::Image#filledRectangle(<var>x1</var>, <var>y1</var>, <var>x2</var>, <var>y2</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#filledRectangle" -->
+</dl>
+<p>Draw a filled rectangle. See also <a href="#label:69">GD::Image#rectangle</a>.</p>
+<dl>
+<dt><a name="label:66" id="label:66"><code>GD::Image#fillToBorder(<var>x</var>, <var>y</var>, <var>border_color</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#fillToBorder" -->
+</dl>
+<p>floods a portion of the image with the specified <var>color</var>,
+beginning at the specified point (<var>x</var>,<var>y</var>) and stopping at the
+specified <var>border_color</var>.</p>
+<p>The <var>border_color</var> cannot be a special color such as
+<a href="#label:7">GD::Tiled</a>. It must be a proper solid color. However the fill
+<var>color</var> can be a special color.</p>
+<dl>
+<dt><a name="label:67" id="label:67"><code>GD::Image#line(<var>x1</var>, <var>y1</var>, <var>x2</var>, <var>y2</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#line" -->
+</dl>
+<p>Draw a line between two endpoints (<var>x1</var>,<var>y1</var>) and
+(<var>x2</var>,<var>y2</var>).  <var>color</var> is the color allocated by
+<a href="#label:50">GD::Image#colorAllocate</a>, or one of <a href="#label:5">GD::Styled</a>,
+<a href="#label:4">GD::Brushed</a>, <a href="#label:6">GD::StyledBrushed</a>.</p>
+<dl>
+<dt><a name="label:68" id="label:68"><code>GD::Image#polygon(<var>points</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#polygon" -->
+</dl>
+<p>Draw a polygon with the verticies (at least 3) specified, using the
+<var>color</var> index. <var>points</var> is <!-- Index, but conflict -->GD::Polygon<!-- Index end --> instance. After
+you created the <!-- Index, but conflict -->GD::Polygon<!-- Index end --> instances and did some operation on
+the vertices, the poligon is drawn with this method.</p>
+<dl>
+<dt><a name="label:69" id="label:69"><code>GD::Image#rectangle(<var>x1</var>, <var>y1</var>, <var>x2</var>, <var>y2</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#rectangle" -->
+</dl>
+<p>Draw a rectangle with two corners(upper left is (<var>x1</var>,<var>y1</var>),
+lower right (<var>x2</var>, <var>y2</var>)) with the specified <var>color</var>
+index.</p>
+<dl>
+<dt><a name="label:70" id="label:70"><code>GD::Image#setBrush(<var>image</var>)</code></a><!-- RDLabel: "GD::Image#setBrush" -->
+</dl>
+<p>Set a "brush"(an image used to draw wide, shaped strokes) to
+<var>image</var>.  <var>image</var> can be any of <!-- Index, but conflict -->GD::Image<!-- Index end --> instance.By
+setting the transparent color index of the brush image with
+<a href="#label:59">GD::Image#transparent</a>, a brush of any shape can be created. All
+line-drawing methods, such as <a href="#label:67">GD::Image#line</a> and
+<a href="#label:68">GD::Image#polygon</a>, will use the current brush if the special
+"color" <a href="#label:4">GD::Brushed</a> or <a href="#label:6">GD::StyledBrushed</a> is used when
+invoking them.</p>
+<p>As for any image instance, brush image must be destroyed by
+<a href="#label:47">GD::Image#destroy</a>.</p>
+<dl>
+<dt><a name="label:71" id="label:71"><code>GD::Image#setPixel(<var>x</var>, <var>y</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#setPixel" -->
+</dl>
+<p>Set the color of a pixel at (<var>x</var>,<var>y</var>) to <var>color</var> index.</p>
+<dl>
+<dt><a name="label:72" id="label:72"><code>GD::Image#setStyle(<var>color1</var>, <var>color2</var>, ...)</code></a><!-- RDLabel: "GD::Image#setStyle" -->
+</dl>
+<p>Set the series of colors to be drawn repeatedly during the drawing by
+a method such as <a href="#label:67">GD::Image#line</a>. Each element of <var>color</var> is
+either the color index allocated by <a href="#label:50">GD::Image#colorAllocate</a>, or
+<a href="#label:8">GD::Transparent</a> if you want the color of the particular pixel
+left unchanged.</p>
+<dl>
+<dt><a name="label:73" id="label:73"><code>GD::Image#setTile(<var>image</var>)</code></a><!-- RDLabel: "GD::Image#setTile" -->
+</dl>
+<p>Set the image to be tiled. <var>image</var> can be any <!-- Index, but conflict -->GD::Image<!-- Index end --> instance.</p>
+<h5><a name="label:74" id="label:74">Copy and Merge</a></h5><!-- RDLabel: "Copy and Merge" -->
+<dl>
+<dt><a name="label:75" id="label:75"><code>GD::Image#copy(<var>dest_img</var>, <var>dest_X</var>, <var>dest_Y</var>, <var>self_X</var>, <var>self_Y</var>, <var>width</var>, <var>height</var>)</code></a><!-- RDLabel: "GD::Image#copy" -->
+</dl>
+<p>Copy a portion of the image at (<var>self_X, self_Y</var>) with specified
+<var>width</var> and <var>height</var> to (<var>dest_X</var>, <var>dest_Y</var>) of
+<var>dest_img</var>.</p>
+<dl>
+<dt><a name="label:76" id="label:76"><code>GD::Image#copyMerge(<var>dest_img</var>, <var>dest_X</var>, <var>dest_Y</var>, <var>self_X</var>, <var>self_Y</var>, <var>width</var>, <var>height</var>, <var>percent</var>)</code></a><!-- RDLabel: "GD::Image#copyMerge" -->
+</dl>
+<p>Copy the two images by an amount specified in the last parameter
+<var>percent</var>. Arguments except for this are identical to those of
+<a href="#label:75">GD::Image#copy</a>. If <var>percent</var> is equal to 100, then this
+method will function identically to <a href="#label:75">GD::Image#copy</a> i.e. the
+source image replaces the pixels in the destination. If the
+<var>percent</var> = 0, no action is taken.</p>
+<p>This feature is most useful to 'highlight' sections of an image by
+merging a solid color with <var>percent</var> = 50.</p>
+<dl>
+<dt><a name="label:77" id="label:77"><code>GD::Image#copyMergeGray(<var>dest_img</var>, <var>dest_X</var>, <var>dest_Y</var>, <var>self_X</var>, <var>self_Y</var>, <var>width</var>, <var>height</var>, <var>percent</var>)</code></a><!-- RDLabel: "GD::Image#copyMergeGray" -->
+</dl>
+<p>Identical to <a href="#label:76">GD::Image#copyMerge</a>, except that when merging
+images it preserves the hue of the source by converting the
+destination pixels to grey scale before the copy operation.</p>
+<dl>
+<dt><a name="label:78" id="label:78"><code>GD::Image#copyResized(<var>dest_img</var>, <var>dest_X</var>, <var>dest_Y</var>, <var>self_X</var>, <var>self_Y</var>, <var>self_width</var>, <var>self_height</var>, <var>dest_X</var>, <var>dest_Y</var>)</code></a><!-- RDLabel: "GD::Image#copyResized" -->
+</dl>
+<p>Copy a portion of the image at (<var>self_X, self_Y</var>) with specified
+<var>self_width</var> and <var>self_height</var> to <var>dest_img</var> at
+(<var>dest_X</var>, <var>dest_Y</var>) with specified <var>dest_width</var> and
+<var>dest_height</var>.</p>
+<dl>
+<dt><a name="label:79" id="label:79"><code>GD::Image#paletteCopy(<var>dest</var>)</code></a><!-- RDLabel: "GD::Image#paletteCopy" -->
+</dl>
+<p>Copies a palette to <var>dest</var> image, attempting to match the colors
+in the target image to the colors in the palette of the self.</p>
+<h5><a name="label:80" id="label:80">Font and text handling</a></h5><!-- RDLabel: "Font and text handling" -->
+<dl>
+<dt><a name="label:81" id="label:81"><code>GD::Image#char(<var>font</var>, <var>x</var>, <var>y</var>, <var>char</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#char" -->
+</dl>
+<p>Draws a single character <var>char</var> at (<var>x</var>, <var>y</var>) with
+specified <var>color</var>. <var>font</var> is specified by one of
+<a href="#label:161">GD::Font::TinyFont</a>, <a href="#label:160">GD::Font::SmallFont</a>,
+<a href="#label:159">GD::Font::MediumFont</a>, <a href="#label:158">GD::Font::LargeFont</a>,
+<a href="#label:157">GD::Font::GiantFont</a>.</p>
+<dl>
+<dt><a name="label:82" id="label:82"><code>GD::Image#charUp(<var>font</var>, <var>x</var>, <var>y</var>, <var>char</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#charUp" -->
+</dl>
+<p>Draws a single chracter <var>char</var> at (<var>x</var>, <var>y</var>) with
+specified <var>color</var>. <var>char</var> is drawn in a vertical direction,
+i.e. drawn with rotated in 90 degree. See also <a href="#label:81">GD::Image#char</a>.</p>
+<dl>
+<dt><a name="label:83" id="label:83"><code>GD::Image#string(<var>font</var>, <var>x</var>, <var>y</var>, <var>str</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#string" -->
+</dl>
+<p>Draws multiple characters <var>str</var> on the image with the specified
+<var>color</var>. <var>font</var> is specified by one of
+<a href="#label:161">GD::Font::TinyFont</a>, <a href="#label:160">GD::Font::SmallFont</a>,
+<a href="#label:159">GD::Font::MediumFont</a>, <a href="#label:158">GD::Font::LargeFont</a>,
+<a href="#label:157">GD::Font::GiantFont</a>, or <!-- Index, but conflict -->GD::Font<!-- Index end --> instance created by
+<a href="#label:150">GD::Font.new</a>.</p>
+<dl>
+<dt><a name="label:84" id="label:84"><code>GD::Image#stringUp(<var>font</var>, <var>x</var>, <var>y</var>, <var>str</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#stringUp" -->
+</dl>
+<p>Draw multiple characters <var>str</var> on the image with the specified
+<var>color</var>. <var>str</var> is drawn in a vertical direction, i.e. drawn
+with rotated in 90 degree. See also <a href="#label:83">GD::Image#string</a>.</p>
+<dl>
+<dt><a name="label:85" id="label:85"><code>GD::Image#stringTTF(<var>fg_color</var>, <var>fnt_name</var>, <var>pt</var>, <var>angle</var>, <var>x</var>, <var>y</var>, <var>str</var>)</code></a><!-- RDLabel: "GD::Image#stringTTF" -->
+</dl>
+<p>(gd-1.6.1 or later) </p>
+<p>Draws a string <var>str</var> at (<var>x</var>, <var>y</var>) on the image using
+user-supplied TrueType fonts with specified <var>fg_color</var>.  The
+location of TrueType font <var>fnt_name</var> is specified by full path.
+The string may be arbitrarily scaled at <var>pt</var> and rotated
+(<var>angle</var> in radians).</p>
+<p>This method returns an array of 2 elements. the first element is the
+error message string, the 2nd is <em>brect</em> of the bounding rectangle
+with 8 elements. Each element of <em>brect</em> is illustrated as below:</p>
+<pre>(brect[6],brect[7])   (brect[4],brect[5]) 
+         +--------------------+
+         |( S  t  r  i  n  g )|
+         +--------------------+
+(brect[0],brect[1])   (brect[2],brect[3])</pre>
+<p>When the string is successfully drawn, error message is <!-- Index, but conflict -->nil<!-- Index end -->. </p>
+<p>If you only want to know the brect of the bounding rectangle, you can
+use <a href="#label:38">GD::Image.stringTTF</a>.</p>
+<dl>
+<dt><a name="label:86" id="label:86"><code>GD::Image#stringFT(<var>fg_color</var>, <var>fnt_name</var>, <var>pt</var>, <var>angle</var>, <var>x</var>, <var>y</var>, <var>str</var>)</code></a><!-- RDLabel: "GD::Image#stringFT" -->
+</dl>
+<p>(gd-1.8.4) </p>
+<p>This method provides the same functionarity as
+<a href="#label:85">GD::Image#stringTTF</a> does, but uses FreeType2 library when
+redering the string.</p>
+<h5><a name="label:37" id="label:37">Query</a></h5><!-- RDLabel: "Query" -->
+<dl>
+<dt><a name="label:88" id="label:88"><code>GD::Image#bounds</code></a><!-- RDLabel: "GD::Image#bounds" -->
+</dl>
+<p>Returns the width and height of the image as Array instance.</p>
+<dl>
+<dt><a name="label:89" id="label:89"><code>GD::Image#boundsSafe(<var>x</var>, <var>y</var>)</code></a><!-- RDLabel: "GD::Image#boundsSafe" -->
+</dl>
+<p>Returns <!-- Index, but conflict -->true<!-- Index end --> if specified point (<var>x</var>,<var>y</var>) is within the
+bounds of the image. Otherwise return <!-- Index, but conflict -->false<!-- Index end -->.</p>
+<dl>
+<dt><a name="label:90" id="label:90"><code>GD::Image#blue(<var>idx</var>)</code></a><!-- RDLabel: "GD::Image#blue" -->
+</dl>
+<p>Returns the blue component of the specified color index <var>idx</var>.</p>
+<dl>
+<dt><a name="label:91" id="label:91"><code>GD::Image#colorsTotal</code></a><!-- RDLabel: "GD::Image#colorsTotal" -->
+</dl>
+<p>Returns the number of colors currently allocated in the image. </p>
+<dl>
+<dt><a name="label:92" id="label:92"><code>GD::Image#getTransparent</code></a><!-- RDLabel: "GD::Image#getTransparent" -->
+</dl>
+<p>Returns the current transparent color index of the image. Returns -1
+if there is no transparent color.</p>
+<dl>
+<dt><a name="label:93" id="label:93"><code>GD::Image#getPixel(<var>x</var>, <var>y</var>)</code></a><!-- RDLabel: "GD::Image#getPixel" -->
+</dl>
+<p>Returns the color index of a pixel at (<var>x</var>,<var>y</var>)).</p>
+<dl>
+<dt><a name="label:94" id="label:94"><code>GD::Image#green(<var>idx</var>)</code></a><!-- RDLabel: "GD::Image#green" -->
+</dl>
+<p>Returns the green component of the specified color index <var>idx</var>.</p>
+<dl>
+<dt><a name="label:95" id="label:95"><code>GD::Image#height</code></a><!-- RDLabel: "GD::Image#height" -->
+</dl>
+<p>Returns the height of the image.</p>
+<dl>
+<dt><a name="label:96" id="label:96"><code>GD::Image#interlace</code></a><!-- RDLabel: "GD::Image#interlace" -->
+</dl>
+<p>Returns <!-- Index, but conflict -->true<!-- Index end --> if the image is interlaced, and returns <!-- Index, but conflict -->false<!-- Index end --> otherwise.</p>
+<dl>
+<dt><a name="label:97" id="label:97"><code>GD::Image#red(<var>idx</var>)</code></a><!-- RDLabel: "GD::Image#red" -->
+</dl>
+<p>Returns the red component of the specified color index <var>idx</var>.</p>
+<dl>
+<dt><a name="label:98" id="label:98"><code>GD::Image#rgb(<var>idx</var>)</code></a><!-- RDLabel: "GD::Image#rgb" -->
+</dl>
+<p>Returns array of the RGB values for the specified index <var>idx</var> of
+the image.</p>
+<dl>
+<dt><a name="label:99" id="label:99"><code>GD::Image#width</code></a><!-- RDLabel: "GD::Image#width" -->
+</dl>
+<p>Returns the width of the image.</p>
+<h5><a name="label:100" id="label:100">Output</a></h5><!-- RDLabel: "Output" -->
+<dl>
+<dt><a name="label:101" id="label:101"><code>GD::Image#gd(<var>file</var>)</code></a><!-- RDLabel: "GD::Image#gd" -->
+</dl>
+<p>Outputs the image to the specified <var>file</var> in Gd format. </p>
+<dl>
+<dt><a name="label:102" id="label:102"><code>GD::Image#gd2(<var>file</var>, <var>chunk_size</var>, <var>fmt</var>)</code></a><!-- RDLabel: "GD::Image#gd2" -->
+</dl>
+<p>Outputs the image to the specified <var>file</var> in Gd2 format with
+specified <var>chunk_size</var> and <var>fmt</var>. A gd2 Image are stored as a
+series of compressed/uncompressed subimages. You can specify
+<var>chunk_size</var> which determines the size of the subimages. If 
+<var>chunk_size</var> is set zero, the default size is used. Whether the image
+is compressed or uncompressed is determined by <var>fmt</var> being
+<a href="#label:9">GD::GD2_FMT_COMPRESSED</a> or
+<a href="#label:10">GD::GD2_FMT_RAW</a>, respectively.</p>
+<dl>
+<dt><a name="label:103" id="label:103"><code>GD::Image#jpeg(<var>file</var>, <var>quality</var>)</code></a><!-- RDLabel: "GD::Image#jpeg" -->
+</dl>
+<p>(gd-1.8 or later)</p>
+<p>Outputs the image to the specified <var>file</var> with <var>quality</var> in
+Jpeg format. If <var>quality</var> is set to nagative, the default IJG JPEG
+quality value (which should yield a good general quality size
+trade-off for most situations) is used.  For practical purposes,
+quality should be a value in the range 0-95.</p>
+<dl>
+<dt><a name="label:104" id="label:104"><code>GD::Image#jpegStr(<var>quality</var>)</code></a><!-- RDLabel: "GD::Image#jpegStr" -->
+</dl>
+<p>(gd-1.8 or later)</p>
+<p>Outputs the Jpeg image as String object with specified <var>quality</var>.
+This method will be especially useful when you want to transmit an
+image <em>directly</em> to an user(i.e, without first writing it to a
+file).</p>
+<p>This method is provided by Colin Steele(colin@webg2.com). </p>
+<dl>
+<dt><a name="label:105" id="label:105"><code>GD::Image#png(<var>file</var>)</code></a><!-- RDLabel: "GD::Image#png" -->
+</dl>
+<p>Outputs the image to the specified <var>file</var> in PNG format. </p>
+<dl>
+<dt><a name="label:106" id="label:106"><code>GD::Image#pngStr(<var>file</var>)</code></a><!-- RDLabel: "GD::Image#pngStr" -->
+</dl>
+<p>Outputs the image in PNG format as String object.  This method will be
+especially useful when you want to transmit an image <em>directly</em> to
+an user(i.e, without first writing it to a file).</p>
+<dl>
+<dt><a name="label:107" id="label:107"><code>GD::Image#wbmp(<var>fg_color</var>, <var>file</var>)</code></a><!-- RDLabel: "GD::Image#wbmp" -->
+</dl>
+<p>(gd-1.8 or later)</p>
+<p>Outputs the specified image to the specified file in WBMP format.</p>
+<p>WBMP file support is <em>black</em> and <em>white</em> only. The color index
+specified by the <var>fg_color</var> argument is the "foreground," and only
+pixels of this color will be set in the WBMP file. All other pixels
+will be considered "background."</p>
+<h3><a name="label:11" id="label:11">gd-2.0.0 or higher</a></h3><!-- RDLabel: "gd-2.0.0 or higher" -->
+<h5><a name="label:109" id="label:109">Color handling</a></h5><!-- RDLabel: "Color handling" -->
+<dl>
+<dt><a name="label:110" id="label:110"><code>GD::Image#colorAllocateAlpha(<var>r</var>, <var>g</var>, <var>b</var>, <var>alpha</var>)</code></a><!-- RDLabel: "GD::Image#colorAllocateAlpha" -->
+<dt><a name="label:110" id="label:110"><code>GD::Image#colorAllocateAlpha(<var>rgbstr</var>, <var>alpha</var>)</code></a><!-- RDLabel: "GD::Image#colorAllocateAlpha" -->
+</dl>
+<p>Finds the first available color index in the image specified, sets its
+RGBA values to those requested and returns the index of the new color
+table entry, or an RGBA value in the case of a truecolor image; in
+either case you can then use the returned value as a parameter to
+drawing functions. The <var>alpha</var> value takes between 0(opaque) and
+127(transparent).</p>
+<p>See also <a href="#label:50">GD::Image#colorAllocate</a>.</p>
+<dl>
+<dt><a name="label:112" id="label:112"><code>GD::Image#colorExactAlpha(<var>r</var>, <var>g</var>, <var>b</var>, <var>alpha</var>)</code></a><!-- RDLabel: "GD::Image#colorExactAlpha" -->
+<dt><a name="label:112" id="label:112"><code>GD::Image#colorExactAlpha(<var>rgbstr</var>, <var>alpha</var>)</code></a><!-- RDLabel: "GD::Image#colorExactAlpha" -->
+</dl>
+<p>Searches the colors which have been defined thus far in the image
+specified and returns the index of the first color entry which exactly
+match those of the request, or an RGBA value in the case of a
+truecolor image; in either case you can then use the returned value as
+a parameter to drawing functions.The <var>alpha</var> value takes between
+0(opaque) and 127(transparent).</p>
+<p>See also <a href="#label:55">GD::Image#colorExact</a>.</p>
+<dl>
+<dt><a name="label:114" id="label:114"><code>GD::Image#colorClosestAlpha(<var>r</var>, <var>g</var>, <var>b</var>, <var>alpha</var>)</code></a><!-- RDLabel: "GD::Image#colorClosestAlpha" -->
+<dt><a name="label:114" id="label:114"><code>GD::Image#colorClosestAlpha(<var>rgbstr</var>, <var>alpha</var>)</code></a><!-- RDLabel: "GD::Image#colorClosestAlpha" -->
+</dl>
+<p>Searches the colors which have been defined thus far in the palette
+image specified and returns the index of the color with RGBA values
+closest to those of the request. The <var>alpha</var> value takes between
+0(opaque) and 127(transparent).</p>
+<p>Closeness is determined by Euclidian distance, which is used to
+determine the distance in four-dimensional color/alpha space between
+colors.</p>
+<p>When applied to a truecolor image, this method always succeeds in
+returning the desired color.</p>
+<p>See also <a href="#label:52">GD::Image#colorClosest</a>.</p>
+<dl>
+<dt><a name="label:116" id="label:116"><code>GD::Image#colorResolveAlpha(<var>r</var>, <var>g</var>, <var>b</var>, <var>alpha</var>)</code></a><!-- RDLabel: "GD::Image#colorResolveAlpha" -->
+<dt><a name="label:116" id="label:116"><code>GD::Image#colorResolveAlpha(<var>rgbstr</var>, <var>alpha</var>)</code></a><!-- RDLabel: "GD::Image#colorResolveAlpha" -->
+</dl>
+<p>Searches the colors which have been defined thus far in the palette
+image specified and returns the index of the first color with RGBA
+values which exactly match those of the request. The <var>alpha</var> value
+takes between 0(opaque) and 127(transparent).</p>
+<p>If no allocated color matches the request precisely, then it tries to
+allocate the exact color. If there is no space left in the color table
+then it returns the closest color (as in
+<!-- Reference, RDLabel "GD::Image#closestAlpha" doesn't exist --><em class="label-not-found">GD::Image#closestAlpha</em><!-- Reference end -->). </p>
+<p>This method always returns an index of a color.  When applied to a
+truecolor image, this function always succeeds in returning the
+desired color.</p>
+<p>See also <a href="#label:57">GD::Image#colorResolve</a>.</p>
+<dl>
+<dt><a name="label:118" id="label:118"><code>GD::Image#alphaBlending=(<var>bool</var>)</code></a><!-- RDLabel: "GD::Image#alphaBlending=" -->
+</dl>
+<p>Specifies the different modes for drawing on <em>truecolor</em> images.
+When <var>bool</var> sets <!-- Index, but conflict -->true<!-- Index end -->("blending mode"), how much of the
+underlying color should be allowed to shine through is determined by
+the alpha channel value of the color.</p>
+<p>This blending mode is effective for the following drawing operations,
+and in this mode, the existing color at the drawing point is blended
+with drawing color with its alpha value.</p>
+<p>When <var>bool</var> sets <!-- Index, but conflict -->false<!-- Index end -->("non-blending mode"), the existing
+color at the drawing point is replaced by the drawing color with its
+own alpha value.</p>
+<p>Note that this blending mode is not available when drawing on
+<em>palette</em> images.</p>
+<dl>
+<dt><a name="label:119" id="label:119"><code>GD::Image#alpha(<var>color</var>)</code></a><!-- RDLabel: "GD::Image#alpha" -->
+</dl>
+<p>Returns the alpha channel component (between 0 and 127) of the
+specified color index.</p>
+<h5><a name="label:120" id="label:120">Image manipulation</a></h5><!-- RDLabel: "Image manipulation" -->
+<dl>
+<dt><a name="label:121" id="label:121"><code>GD::Image#copyResampled(<var>dest_img</var>, <var>dest_X</var>, <var>dest_Y</var>, <var>self_X</var>, <var>self_Y</var>, <var>dest_width</var>, <var>dest_height</var>, <var>self_width</var>, <var>self_height</var>)</code></a><!-- RDLabel: "GD::Image#copyResampled" -->
+</dl>
+<p>Copies a rectangular portion of one image to another image, smoothly
+interpolating pixel values so that, in particular, reducing the size
+of an image still retains a great deal of clarity.</p>
+<p>Pixel values are interpolated only if the destination image is a
+truecolor image. Otherwise, for a palette image, the same
+functionality as <a href="#label:78">GD::Image#copyResized</a> will be invoked.</p>
+<p>See also <a href="#label:78">GD::Image#copyResized</a>, for a version which does not
+interpolate pixel values.</p>
+<dl>
+<dt><a name="label:122" id="label:122"><code>GD::Image#filledEllipse(<var>cx</var>, <var>cy</var>, <var>width</var>, <var>height</var>, <var>start</var>, <var>end</var>, <var>color</var>)</code></a><!-- RDLabel: "GD::Image#filledEllipse" -->
+</dl>
+<p>draws an ellipse centered at the given point (<var>cx</var>, <var>cy</var>),
+with the specified <var>width</var> and <var>height</var> in pixels.</p>
+<p>The ellipse is filled in the <var>color</var> and is drawn by beginning
+from <var>start</var> degrees and ending at <var>end</var> degrees. <var>end</var>
+must be greater than <var>start</var>. Values greater than 360 are
+interpreted modulo 360.</p>
+<dl>
+<dt><a name="label:123" id="label:123"><code>GD::Image#filledArc(<var>cx</var>, <var>cy</var>, <var>width</var>, <var>height</var>, <var>start</var>, <var>end</var>, <var>color</var>, <var>style</var>)</code></a><!-- RDLabel: "GD::Image#filledArc" -->
+</dl>
+<p>draws an partial ellipse(arc) centered at the given point (<var>cx</var>,
+<var>cy</var>), with the specified <var>width</var> and <var>height</var> in pixels,
+and filled in the <var>color</var>.  The arc begins at <var>start</var> degrees
+and ends at <var>end</var> degrees.</p>
+<p>The last argument is bitwise <code>OR</code> of the following possibilities.</p>
+<ul>
+<li><code>GD::Arc</code></li>
+</ul>
+<p>draws the rounded edge between <var>start</var> and <var>end</var>.</p>
+<ul>
+<li><code>GD::Chord</code></li>
+</ul>
+<p>draws the line connecting <var>start</var> and <var>end</var>.</p>
+<ul>
+<li><code>GD::Pie</code> </li>
+</ul>
+<p>synonym for <code>GD::Arc</code></p>
+<ul>
+<li><code>GD::NoFill</code></li>
+</ul>
+<p>indicates Pie and Chord should be outlined, not filled.</p>
+<ul>
+<li><code>GD::Edged</code></li>
+</ul>
+<p>used together with <code>GD::NoFill</code>, indicates that the beginning and
+ending angles should be connected to the center; this is a good way to
+outline (rather than fill) a 'pie slice'.</p>
+<dl>
+<dt><a name="label:124" id="label:124"><code>GD::Image#to_paletteImage(<var>dither_flag</var>, <var>colors</var>)</code></a><!-- RDLabel: "GD::Image#to_paletteImage" -->
+</dl>
+<p>transforms the truecolor image to palette image. If <var>dither_flag</var>
+is <!-- Index, but conflict -->true<!-- Index end -->, the image will be dithered to approximate colors
+better, at the expense of some obvious "speckling." <var>colors</var> may
+be anything up to 256, but if the image includes the photographic
+information, or is a JPEG image, 256 is strongly recommended.</p>
+<h5><a name="label:125" id="label:125">Query methods</a></h5><!-- RDLabel: "Query methods" -->
+<dl>
+<dt><a name="label:126" id="label:126"><code>GD::Image#is_trueColor?</code></a><!-- RDLabel: "GD::Image#is_trueColor?" -->
+</dl>
+<p>returns <!-- Index, but conflict -->true<!-- Index end --> if the image is a truecolor image.</p>
+<dl>
+<dt><a name="label:127" id="label:127"><code>GD::Image#is_palette?</code></a><!-- RDLabel: "GD::Image#is_palette?" -->
+</dl>
+<p>returns <!-- Index, but conflict -->true<!-- Index end --> if the image is a palette image.</p>
+<dl>
+<dt><a name="label:128" id="label:128"><code>GD::Image#thickness=(<var>val</var>)</code></a><!-- RDLabel: "GD::Image#thickness=" -->
+</dl>
+<p>specifies the line thickness (defaults to 1) that affects methods
+drawing lines or curves. </p>
+<h1><a name="label:129" id="label:129">Class GD::Polygon</a></h1><!-- RDLabel: "Class GD::Polygon" -->
+<h2><a name="label:20" id="label:20">Class Methods</a></h2><!-- RDLabel: "Class Methods" -->
+<dl>
+<dt><a name="label:131" id="label:131"><code>GD::Polygon.new</code></a><!-- RDLabel: "GD::Polygon.new" -->
+</dl>
+<p>Creates a new polygon instance. After some operations provided below,
+the polygon is drawn on the image by <a href="#label:68">GD::Image#polygon</a> method.</p>
+<h2><a name="label:46" id="label:46">Methods</a></h2><!-- RDLabel: "Methods" -->
+<h5><a name="label:133" id="label:133">Operation</a></h5><!-- RDLabel: "Operation" -->
+<dl>
+<dt><a name="label:134" id="label:134"><code>GD::Polygon#addPt(<var>x</var>, <var>y</var>)</code></a><!-- RDLabel: "GD::Polygon#addPt" -->
+</dl>
+<p>Adds a new point(vertex) from which the polygon is formed.</p>
+<dl>
+<dt><a name="label:135" id="label:135"><code>GD::Polygon#deletePt(<var>idx</var>)</code></a><!-- RDLabel: "GD::Polygon#deletePt" -->
+</dl>
+<p>Deletes the the specified <var>idx</var>-th elements of the vertices.</p>
+<dl>
+<dt><a name="label:136" id="label:136"><code>GD::Polygon#getPt(<var>idx</var>)</code></a><!-- RDLabel: "GD::Polygon#getPt" -->
+</dl>
+<p>Returns the value of the specified <var>idx</var>-th elements of the
+vertices.</p>
+<dl>
+<dt><a name="label:137" id="label:137"><code>GD::Polygon#map(<var>dest_L</var>, <var>dest_T</var>, <var>dest_R</var>, <var>dest_B</var>)</code></a><!-- RDLabel: "GD::Polygon#map" -->
+<dt><a name="label:137" id="label:137"><code>GD::Polygon#map([<var>src_L</var>, <var>src_T</var>, <var>src_R</var>, <var>src_B</var>,] <var>dest_L</var>, <var>dest_T</var>, <var>dest_R</var>, <var>dest_B</var>)</code></a><!-- RDLabel: "GD::Polygon#map" -->
+</dl>
+<p>Maps the polygon from a source rectangle to an equivalent position in
+a destination rectangle, moving it and resizing it as necessary. Both
+the source and destination rectangles are given in
+(left,top,right,bottom) coordinates. See figure below.</p>
+<p>This method takes 4 or 8 arguments. Note that if 4 arguments are
+given, source rectangle are automatically computed as the bounding box
+of the poligon, and maps it to the destination rectangle specified in
+the arguments.</p>
+<pre>&lt;source rectangle&gt;            &lt;destination rectangle&gt;</pre>
+<pre>(src_L, src_T)                  (dest_L, dest_T)                
+        +--------------+                  +----------+        
+        |              |                  |          |
+        |              |        =&gt;        |          |        
+        |              |                  |          |        
+        +--------------+                  |          |
+               (src_R, src_B)             +----------+ 
+                                              (dest_R, dest_B)</pre>
+<dl>
+<dt><a name="label:139" id="label:139"><code>GD::Polygon#offset(<var>dx</var>, <var>dy</var>)</code></a><!-- RDLabel: "GD::Polygon#offset" -->
+</dl>
+<p>Offsets all the vertices of the polygon by <var>dx</var> pixels
+horizontally and <var>dy</var> pixels vertically.</p>
+<dl>
+<dt><a name="label:140" id="label:140"><code>GD::Polygon#setPt(<var>idx</var>, <var>new_x</var>, <var>new_y</var>)</code></a><!-- RDLabel: "GD::Polygon#setPt" -->
+</dl>
+<p>Changes the value of the specified <var>idx</var>-th elements of the
+vertices to (<var>new_x</var>, <var>new_y</var>).</p>
+<dl>
+<dt><a name="label:141" id="label:141"><code>GD::Polygon#toPt(<var>dx</var>, <var>dy</var>)</code></a><!-- RDLabel: "GD::Polygon#toPt" -->
+</dl>
+<p>Draw from current vertex to a new vertex, using relative (<var>dx</var>,
+<var>dy</var>) coordinates.  If this is the first point, act like
+<!-- Reference, RDLabel "GD::Image#addPt" doesn't exist --><em class="label-not-found">GD::Image#addPt</em><!-- Reference end -->.</p>
+<dl>
+<dt><a name="label:142" id="label:142"><code>GD::Polygon#scale(<var>sx</var>, <var>sy</var>)</code></a><!-- RDLabel: "GD::Polygon#scale" -->
+</dl>
+<p>Scales each vertex of the polygon by the X and Y factors indicated by
+<var>sx</var> and <var>sy</var>.  For best results, move the center of the
+polygon to position (0,0) before you scale, then move it back to its
+previous position.</p>
+<dl>
+<dt><a name="label:143" id="label:143"><code>GD::Polygon#transform(<var>sx</var>,<var>rx</var>,<var>sy</var>,<var>ry</var>,<var>tx</var>,<var>ty</var>)</code></a><!-- RDLabel: "GD::Polygon#transform" -->
+</dl>
+<p>Runs each vertex of the polygon through a transformation matrix, where
+<var>sx</var> and <var>sy</var> are the X and Y scaling factors, <var>rx</var> and
+<var>ry</var> are the X and Y rotation factors, and <var>tx</var> and <var>ty</var>
+are X and Y offsets.</p>
+<h5><a name="label:37" id="label:37">Query</a></h5><!-- RDLabel: "Query" -->
+<dl>
+<dt><a name="label:145" id="label:145"><code>GD::Polygon#bounds</code></a><!-- RDLabel: "GD::Polygon#bounds" -->
+</dl>
+<p>Returns the smallest rectangle that completely encloses the polygon.
+The return value is an array containing the [left,top,right,bottom] of
+the rectangle.</p>
+<dl>
+<dt><a name="label:146" id="label:146"><code>GD::Polygon#length</code></a><!-- RDLabel: "GD::Polygon#length" -->
+</dl>
+<p>Returns the number of the vertices.</p>
+<dl>
+<dt><a name="label:147" id="label:147"><code>GD::Polygon#vertices</code></a><!-- RDLabel: "GD::Polygon#vertices" -->
+</dl>
+<p>Returns all of the coodinates of the vertices as Array instance.</p>
+<h1><a name="label:148" id="label:148">Class GD::Font</a></h1><!-- RDLabel: "Class GD::Font" -->
+<h2><a name="label:20" id="label:20">Class Methods</a></h2><!-- RDLabel: "Class Methods" -->
+<dl>
+<dt><a name="label:150" id="label:150"><code>GD::Font.new(<var>name</var>)</code></a><!-- RDLabel: "GD::Font.new" -->
+</dl>
+<p>Creates a new font instance. The font is specified by its
+<var>name</var>, which is one of "<em>Tiny</em>", "<em>Small</em>",
+"<em>Medium</em>", "<em>Large</em>", "<em>Giant</em>". These strings correspond
+to <a href="#label:161">GD::Font::TinyFont</a>, <a href="#label:160">GD::Font::SmallFont</a>,
+<a href="#label:159">GD::Font::MediumFont</a>, <a href="#label:158">GD::Font::LargeFont</a>,
+<a href="#label:157">GD::Font::GiantFont</a>, respectively.</p>
+<p>The instance becomes the arguments in the charcter/string drawing
+method such as <a href="#label:81">GD::Image#char</a>, <a href="#label:83">GD::Image#string</a>.</p>
+<h2><a name="label:46" id="label:46">Methods</a></h2><!-- RDLabel: "Methods" -->
+<dl>
+<dt><a name="label:152" id="label:152"><code>GD::Font#height</code></a><!-- RDLabel: "GD::Font#height" -->
+</dl>
+<p>Returns the height of each character of the font.</p>
+<dl>
+<dt><a name="label:153" id="label:153"><code>GD::Font#nchars</code></a><!-- RDLabel: "GD::Font#nchars" -->
+</dl>
+<p>Returns the number of characeters in the font.</p>
+<dl>
+<dt><a name="label:154" id="label:154"><code>GD::Font#offset</code></a><!-- RDLabel: "GD::Font#offset" -->
+</dl>
+<p>Returns the offset of the first character in the font.</p>
+<dl>
+<dt><a name="label:155" id="label:155"><code>GD::Font#width</code></a><!-- RDLabel: "GD::Font#width" -->
+</dl>
+<p>Returns the width of each character of the font.</p>
+<h2><a name="label:3" id="label:3">Constants</a></h2><!-- RDLabel: "Constants" -->
+<p>These constants also becomes the arguments in the charcter/string
+drawing method such as <a href="#label:81">GD::Image#char</a>, <a href="#label:83">GD::Image#string</a>.</p>
+<dl>
+<dt><a name="label:157" id="label:157"><code>GD::Font::GiantFont</code></a><!-- RDLabel: "GD::Font::GiantFont" -->
+</dl>
+<p>This stands for 9x15 bold font:</p>
+<pre>-Misc-Fixed-Bold-R-Normal-Sans-15-140-75-75-C-90-ISO8859-2</pre>
+<dl>
+<dt><a name="label:158" id="label:158"><code>GD::Font::LargeFont</code></a><!-- RDLabel: "GD::Font::LargeFont" -->
+</dl>
+<p>This stands for the public domain 8x16 font:</p>
+<pre>-misc-fixed-medium-r-normal--16-140-75-75-c-80-iso8859-2</pre>
+<dl>
+<dt><a name="label:159" id="label:159"><code>GD::Font::MediumFont</code></a><!-- RDLabel: "GD::Font::MediumFont" -->
+</dl>
+<p>This stands for the a public domain 7x13 font:</p>
+<pre>-misc-fixed-bold-r-normal-sans-13-94-100-100-c-70-iso8859-2</pre>
+<dl>
+<dt><a name="label:160" id="label:160"><code>GD::Font::SmallFont</code></a><!-- RDLabel: "GD::Font::SmallFont" -->
+</dl>
+<p>This stands for a well known public domain 6x12 font:</p>
+<pre>-misc-fixed-medium-r-semicondensed-sans-12-116-75-75-c-60-iso8859-2</pre>
+<dl>
+<dt><a name="label:161" id="label:161"><code>GD::Font::TinyFont</code></a><!-- RDLabel: "GD::Font::TinyFont" -->
+</dl>
+<p>This stands for almost unreadable font, 5x8 pixels wide:</p>
+<pre>-Misc-Fixed-Medium-R-Normal--8-80-75-75-C-50-ISO8859-2</pre>
+<h1><a name="label:162" id="label:162">Reference</a></h1><!-- RDLabel: "Reference" -->
+<ul>
+<li>index.html distributed with gd-1.8.4</li>
+<li>index.html distributed with gd-2.0.1</li>
+<li>gd.h distributed with gd-2.0.1</li>
+<li>documents embedded in GD.pm version 1.30</li>
+</ul>
+
+</body>
+</html>

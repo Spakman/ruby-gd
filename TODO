@@ -1,0 +1,7 @@
+= TODO
+* Code refinement. 
+* replace "doc/gd-intro_ja.html" with some manual. This document
+  should be maintained in other place.
+* Implement a class that enables easy string handling.
+* remove some functions in GD.c that are not necessarily to be 
+  coded by C. Polygon object may be implemented with Ruby script.

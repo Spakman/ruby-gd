@@ -1,0 +1,74 @@
+= Ruby/GD 0.7.4
+
+Thomas Boutell氏によるgdライブラリをRubyから利用するための拡張ライブラ
+リです．PNGやJPEGフォーマットのイメージを手軽に作成することができます．
+
+Ruby/GDはもともと"GD"の名称で まつもと ゆきひろ氏(matz@ruby-lang.org) 
+によって開発およびメンテナンスが行われてきました．その後，本家gdの機能 
+の変更/拡張に伴って，Rubyメーリングリストメンバーの方々から多くのパッ 
+チが提供されました．
+
+Version 0.7.0 ではGD-0.6.2をもとにそれらのパッチを取り込み，幾つかの未 
+対応の機能も追加しました．名称もGDからRuby/GDへ変更されています．
+
+最新版は http://kirara.prec.kyoto-u.ac.jp/~tam/GD/ より入手することが
+できます．
+
+== 旧バージョン(旧称：GD-0.6.2.tar.gz)からの主な変更点
+
+* GIFサポートの打ち切り
+
+gdライブラリはversion 1.6以降，GIFイメージの入出力サポートを停止し そ
+の代りにPNG(Portable Network Graphics)イメージに対応するようになって 
+います．それに従って，Ruby/GD 0.7.0もGIFに関するサポートを全て取り払い 
+ました．よって，Ruby/GDは gd-1.4 などGIFサポートを行うgdライブラリ に
+は対応していません．
+
+* 最新のgdの機能にも対応
+
+gd-2.0以降で可能となった のTrueColorイメージやアルファチャネルの扱いに
+も対応しています．
+
+== 配布物
+
+readme.ja            このファイル。
+readme.en            このファイルの英語版。
+extconf.rb           拡張ライブラリ用Makefile生成スクリプト
+GD.c                 ソース
+
+doc/INSTALL.ja       インストール方法(日本語)
+doc/INSTALL.en       インストール方法(English)
+doc/manual.rd        マニュアル(English) RDフォーマットで書かれています。
+doc/manual.html      上のマニュアルをHTMLに変換したもの。
+doc/manual_index.html メソッドの索引ファイル。
+doc/manual.css       マニュアルのスタイルシート。
+sample/example.rb    Ruby/GD の基本的な使い方を示すサンプルスクリプト
+sample/gdtestttf.rb  gd-1.8.3 に含まれるgdtestttf.cをRubyに移植したもの。
+sample/gdtestttf.png ./gdtestttf.rb > gdtestttf.png
+sample/webpng.rb     gd-1.8.3 に含まれるwebpng.c をRubyに移植したもの。
+
+== インストール方法
+
+'doc/INSTALL.ja' をお読み下さい。
+
+== ドキュメント
+
+'doc/manual.html' を参照して下さい。
+
+== 配布条件
+
+Ruby Library License に従います。
+
+== メンテナ
+
+田村 龍一(tam@kais.kyoto-u.ac.jp) 
+
+バグ、コメント、提案などはRuby メーリングリストに投稿するか、もしくは
+上記のメンテナまでメールを送ってください。
+
+== 謝辞
+
+* GD拡張ライブラリの原作者であらせられるまつもと ゆきひろさん．
+
+* GD-0.6.2 リリース以降パッチを作成された中村典嗣さん，能條聡史さん．そし
+  てGD ライブラリ発展のためにご尽力されたRuby メーリングリストの皆様．
