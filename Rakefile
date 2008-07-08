@@ -4,7 +4,7 @@ require 'rake/gempackagetask'
 
 spec = Gem::Specification.new do |s|
     s.name       = "ruby-gd"
-    s.version    = "0.7.4"
+    s.version    = "0.8.0"
     s.author     = "Ryuichi Tamura"
     s.email      = "tam at kais dot kyoto-u dot ac dot jp"
     s.homepage   = "http://tam.0xfa.com/ruby-gd"
