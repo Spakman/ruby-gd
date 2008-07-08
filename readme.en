@@ -1,7 +1,7 @@
 = Ruby/GD 0.7.4
 
 An extension library to use Thomas Boutell's gd graphics library from
-Ruby.  You can create PNG or JPEG images with your Ruby script.
+Ruby.  You can create PNG, GIF or JPEG images with your Ruby script.
 
 Ruby/GD requires gd library with PNG support(i.e. the version 1.6 or
 later). See 'doc/INSTALL.en' for detail.
@@ -12,6 +12,10 @@ http://kirara.prec.kyoto-u.ac.jp/~tam/GD/
 Ruby/GD is formerly known as "GD", originally written and maintained
 by Yukihiro "matz" Matsumoto (matz@ruby-lang.org). From this release
 of 0.7.0, Ruby/GD is maintained by Ryuichi Tamura (tam@kais.kyoto-u.ac.jp).
+
+== Changes from the version 0.7.4
+
+* restored GIF I/O, provided by the gd-2.0.28 or later.
 
 == Changes from the version 0.6.2
 
@@ -45,7 +49,7 @@ see 'doc/manual.html'
 
 == Licence
 
-Ruby Libraru Licence
+Ruby Library Licence
 
 == Maintainer
 

@@ -1,3 +1,9 @@
+= Changes from 0.7.4
+
+* GD.c: added
+  GD::Image.newFromGif, GD::Image.new_from_gif, GD::Image#gif, GD::Image#gifStr.
+* doc/manual.rd: documentation update.
+
 = Changes from 0.7.3
 
 * doc/gd-intro_ja.html, doc/imgs/* : removed. 

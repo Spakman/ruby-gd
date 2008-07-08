@@ -165,6 +165,16 @@ object.
 creates a new PNG image instance from ((|filename|)). ((|filename|))
 is a String object which specifies the location of the image file.
 
+--- GD::Image.newFromGif(file)
+
+creates a new image instance from GIF file. ((|file|)) is a File
+object.
+
+--- GD::Image.new_from_gif(filename)
+
+creates a new GIF image instance from ((|filename|)). ((|filename|))
+is a String object which specifies the location of the image file.
+
 --- GD::Image.newFromXbm(file)
 
 creates a new image instance from Xbm file. ((|file|)) is a File
@@ -616,6 +626,16 @@ Outputs the image to the specified ((|file|)) in PNG format.
 --- GD::Image#pngStr(file)
 
 Outputs the image in PNG format as String object.  This method will be
+especially useful when you want to transmit an image ((*directly*)) to
+an user(i.e, without first writing it to a file).
+
+--- GD::Image#gif(file)
+
+Outputs the image to the specified ((|file|)) in GIF format. 
+
+--- GD::Image#gifStr(file)
+
+Outputs the image in GIF format as String object.  This method will be
 especially useful when you want to transmit an image ((*directly*)) to
 an user(i.e, without first writing it to a file).
 

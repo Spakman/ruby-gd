@@ -99,6 +99,49 @@ img_from_png(klass, f)
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
 
+#ifdef ENABLE_GD_2_0
+static VALUE
+img_from_giffname(klass, fname)
+    VALUE klass, fname;
+{
+    VALUE f;
+    OpenFile *fptr;
+    gdImagePtr iptr;
+    
+    Check_Type(fname, T_STRING);
+
+    f = rb_file_open(STR2CSTR(fname), "r");
+    rb_io_binmode(f);
+    GetOpenFile(f, fptr);
+    rb_io_check_readable(fptr);
+
+    iptr = gdImageCreateFromGif(fptr->f);
+    if (!iptr)
+        rb_raise(rb_eArgError, "%s is not a valid GIF File", fptr->path);
+                 
+    return Data_Wrap_Struct(klass,0,free_img,iptr);
+}
+
+static VALUE
+img_from_gif(klass, f)
+    VALUE klass, f;
+{
+    OpenFile *fptr;
+    gdImagePtr iptr;
+
+    Check_Type(f, T_FILE); 
+    rb_io_binmode(f);
+    GetOpenFile(f, fptr);
+    rb_io_check_readable(fptr);
+
+    iptr = gdImageCreateFromGif(fptr->f);
+    if (!iptr)
+        rb_raise(rb_eArgError, "%s is not a valid GIF File", fptr->path);
+                 
+    return Data_Wrap_Struct(klass,0,free_img,iptr);
+}
+#endif /* ENABLE_GD_2_0 */
+
 static VALUE
 img_from_gdfname(klass, fname)
     VALUE klass, fname;
@@ -1492,6 +1535,47 @@ img_png_str(img)
     return imageString;
 }
 
+
+#ifdef ENABLE_GD_2_0
+static VALUE
+img_gif(img, out)
+    VALUE img, out;
+{
+    gdImagePtr im;
+    OpenFile *fptr;
+    FILE *f;
+
+    Data_Get_Struct(img, gdImage, im);
+    Check_Type(out, T_FILE); 
+    rb_io_binmode(out);
+    GetOpenFile(out, fptr);
+    rb_io_check_writable(fptr);
+    f = (fptr->f2) ? fptr->f2 : fptr->f;
+
+    gdImageGif(im, f);
+
+    return img;
+}
+
+static VALUE
+img_gif_str(img)
+    VALUE img;
+{
+    int size;
+    void *ptr;
+    gdImagePtr im;
+    VALUE imageString;
+    
+    Data_Get_Struct(img, gdImage, im);
+    ptr = gdImageGifPtr(im, &size);
+    imageString = rb_str_new(ptr, size);
+    gdFree(ptr);
+
+    return imageString;
+}
+#endif /* ENABLE_GD_2_0 */
+
+
 static VALUE
 img_gd(img, out)
     VALUE img, out;
@@ -2426,7 +2510,10 @@ Init_GD()
     rb_define_singleton_method(cImage, "newPalette", img_s_new, 2);
     rb_define_singleton_method(cImage, "newFromPng", img_from_png, 1);
     rb_define_singleton_method(cImage, "new_from_png", img_from_pngfname, 1);
-
+#ifdef ENABLE_GD_2_0
+    rb_define_singleton_method(cImage, "newFromGif", img_from_gif, 1);
+    rb_define_singleton_method(cImage, "new_from_gif", img_from_giffname, 1);
+#endif /* ENABLE_GD_2_0 */
     rb_define_singleton_method(cImage, "newFromXbm", img_from_xbm, 1);
     rb_define_singleton_method(cImage, "new_from_xbm", img_from_xbmfname, 1);
     
@@ -2526,6 +2613,10 @@ Init_GD()
 
     rb_define_method(cImage, "png", img_png, 1);
     rb_define_method(cImage, "pngStr", img_png_str, 0);
+#ifdef ENABLE_GD_2_0
+    rb_define_method(cImage, "gif", img_gif, 1);
+    rb_define_method(cImage, "gifStr", img_gif_str, 0);
+#endif /* ENABLE_GD_2_0 */
     rb_define_method(cImage, "gd2", img_gd2, 3);
     rb_define_method(cImage, "gd", img_gd, 1);
 
