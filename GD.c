@@ -10,8 +10,7 @@
   $Revision: 1.6.2.3 $
 **************************************************************/
 #include "ruby.h"
-#include "rubyio.h"
-#include "version.h"
+#include "ruby/io.h"
 
 #include "gd.h"
 #include "gdfontg.h"		/* giant */
@@ -62,7 +61,7 @@ img_from_pngfname(klass, fname)
     VALUE klass, fname;
 {
     VALUE f;
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -72,9 +71,9 @@ img_from_pngfname(klass, fname)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromPng(fptr->f);
+    iptr = gdImageCreateFromPng(fdopen(fptr->fd, "r"));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid PNG File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid PNG File", (char*)fptr->pathv);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -84,7 +83,7 @@ static VALUE
 img_from_png(klass, f)
     VALUE klass, f;
 {
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE); 
@@ -92,9 +91,9 @@ img_from_png(klass, f)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromPng(fptr->f);
+    iptr = gdImageCreateFromPng(fdopen(fptr->fd, "r"));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid PNG File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid PNG File", (char*)fptr->pathv);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -105,7 +104,7 @@ img_from_giffname(klass, fname)
     VALUE klass, fname;
 {
     VALUE f;
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -115,9 +114,9 @@ img_from_giffname(klass, fname)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGif(fptr->f);
+    iptr = gdImageCreateFromGif(fdopen(fptr->fd, "r"));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid GIF File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid GIF File", (char*)fptr->pathv);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -126,7 +125,7 @@ static VALUE
 img_from_gif(klass, f)
     VALUE klass, f;
 {
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE); 
@@ -134,9 +133,9 @@ img_from_gif(klass, f)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGif(fptr->f);
+    iptr = gdImageCreateFromGif(fdopen(fptr->fd, "r"));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid GIF File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid GIF File", (char*)fptr->pathv);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -147,7 +146,7 @@ img_from_gdfname(klass, fname)
     VALUE klass, fname;
 {
     VALUE f;
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -157,9 +156,9 @@ img_from_gdfname(klass, fname)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGd(fptr->f);
+    iptr = gdImageCreateFromGd(fdopen(fptr->fd, "r"));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Gd File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid Gd File", (char*)fptr->pathv);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -168,7 +167,7 @@ static VALUE
 img_from_gd(klass, f)
     VALUE klass, f;
 {
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE); 
@@ -176,9 +175,9 @@ img_from_gd(klass, f)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGd(fptr->f);
+    iptr = gdImageCreateFromGd(fdopen(fptr->fd, "r"));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Gd File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid Gd File", (char*)fptr->pathv);
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
 
@@ -187,7 +186,7 @@ img_from_gd2fname(klass, fname)
     VALUE klass, fname;
 {
     VALUE f;
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -197,9 +196,9 @@ img_from_gd2fname(klass, fname)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGd2(fptr->f);
+    iptr = gdImageCreateFromGd2(fdopen(fptr->fd, "r"));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", (char*)fptr->pathv);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -208,7 +207,7 @@ static VALUE
 img_from_gd2(klass, f)
     VALUE klass, f;
 {
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE);
@@ -216,9 +215,9 @@ img_from_gd2(klass, f)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGd2(fptr->f);
+    iptr = gdImageCreateFromGd2(fdopen(fptr->fd, "r"));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", (char*)fptr->pathv);
     
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -228,7 +227,7 @@ img_from_gd2_partfname(klass, fname, srcx, srcy, w, h)
     VALUE klass, fname, srcx, srcy, w, h;
 {
     VALUE f;
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -238,10 +237,10 @@ img_from_gd2_partfname(klass, fname, srcx, srcy, w, h)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGd2Part(fptr->f, NUM2INT(srcx),
+    iptr = gdImageCreateFromGd2Part(fdopen(fptr->fd, "r"), NUM2INT(srcx),
                                     NUM2INT(srcy), NUM2INT(w), NUM2INT(h));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", (char*)fptr->pathv);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -250,7 +249,7 @@ static VALUE
 img_from_gd2_part(klass, f, srcx, srcy, w, h)
     VALUE klass, f, srcx, srcy, w, h;
 {
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE);
@@ -258,10 +257,10 @@ img_from_gd2_part(klass, f, srcx, srcy, w, h)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGd2Part(fptr->f, NUM2INT(srcx),
+    iptr = gdImageCreateFromGd2Part(fdopen(fptr->fd, "r"), NUM2INT(srcx),
                                    NUM2INT(srcy), NUM2INT(w), NUM2INT(h));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", (char*)fptr->pathv);
     
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -271,7 +270,7 @@ static VALUE
 img_from_xbm(klass, f)
     VALUE klass, f;
 {
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE); 
@@ -279,9 +278,9 @@ img_from_xbm(klass, f)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromXbm(fptr->f);
+    iptr = gdImageCreateFromXbm(fdopen(fptr->fd, "r"));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Xbm File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid Xbm File", (char*)fptr->pathv);
 
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -291,7 +290,7 @@ img_from_xbmfname(klass, fname)
     VALUE klass, fname;
 {
     VALUE f;
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -301,9 +300,9 @@ img_from_xbmfname(klass, fname)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromXbm(fptr->f);
+    iptr = gdImageCreateFromXbm(fdopen(fptr->fd, "r"));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Xbm File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid Xbm File", (char*)fptr->pathv);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -313,7 +312,7 @@ static VALUE
 img_from_xpm(klass, f)
     VALUE klass, f;
 {
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE);
@@ -324,7 +323,7 @@ img_from_xpm(klass, f)
     /* need cast, and the argument is char* type */
     iptr = (gdImagePtr)gdImageCreateFromXpm(fptr->path);
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid XPM File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid XPM File", (char*)fptr->path);
 
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -334,7 +333,7 @@ img_from_xpmfname(klass, fname)
     VALUE klass, fname;
 {
     VALUE f;
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -347,7 +346,7 @@ img_from_xpmfname(klass, fname)
     /* need cast, and the argument is char* type */
     iptr = (gdImagePtr)gdImageCreateFromXpm(fptr->path);
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid XPM File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid XPM File", (char*)fptr->path);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -359,7 +358,7 @@ static VALUE
 img_from_jpeg(klass, f)
     VALUE klass, f;
 {
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE);
@@ -367,9 +366,9 @@ img_from_jpeg(klass, f)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
     
-    iptr = gdImageCreateFromJpeg(fptr->f);
+    iptr = gdImageCreateFromJpeg(fdopen(fptr->fd, "r"));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Jpeg File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid Jpeg File", (char*)fptr->pathv);
 
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -379,7 +378,7 @@ img_from_jpegfname(klass, fname)
     VALUE klass, fname;
 {
     VALUE f;
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -389,9 +388,9 @@ img_from_jpegfname(klass, fname)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromJpeg(fptr->f);
+    iptr = gdImageCreateFromJpeg(fdopen(fptr->fd, "r"));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Jpeg File", fptr->path);
+        rb_raise(rb_eArgError, "%s is not a valid Jpeg File", (char*)fptr->pathv);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -418,12 +417,12 @@ hex2triplet(hex)
 
     Check_Type(hex, T_STRING);
     
-    if (RSTRING(hex)->len != 7)
-        rb_raise(rb_eArgError, "Invalid format: %s", RSTRING(hex)->ptr);
+    if (RSTRING_LEN(hex) != 7)
+        rb_raise(rb_eArgError, "Invalid format: %s", RSTRING_PTR(hex));
 
-    rstr = rb_str_new(RSTRING(hex)->ptr + 1, 2);
-    gstr = rb_str_new(RSTRING(hex)->ptr + 3, 2);
-    bstr = rb_str_new(RSTRING(hex)->ptr + 5, 2);
+    rstr = rb_str_new(RSTRING_PTR(hex) + 1, 2);
+    gstr = rb_str_new(RSTRING_PTR(hex) + 3, 2);
+    bstr = rb_str_new(RSTRING_PTR(hex) + 5, 2);
 
     ret_ary = rb_ary_new();
 	
@@ -459,9 +458,9 @@ img_color_allocate_str(img, rgbstr)
     
     ary = hex2triplet(rgbstr);
     c = gdImageColorAllocate(im,
-                             NUM2INT(*(RARRAY(ary)->ptr)),
-                             NUM2INT(*(RARRAY(ary)->ptr+1)),
-                             NUM2INT(*(RARRAY(ary)->ptr+2)));
+                             NUM2INT(*(RARRAY_PTR(ary))),
+                             NUM2INT(*(RARRAY_PTR(ary)+1)),
+                             NUM2INT(*(RARRAY_PTR(ary)+2)));
     return INT2FIX(c);
 }
 
@@ -532,9 +531,9 @@ img_color_resolve_str(img, rgbstr)
 
     ary = hex2triplet(rgbstr);
     c = gdImageColorResolve(im,
-                            NUM2INT(*(RARRAY(ary)->ptr)),
-                            NUM2INT(*(RARRAY(ary)->ptr+1)),
-                            NUM2INT(*(RARRAY(ary)->ptr+2)));
+                            NUM2INT(*(RARRAY_PTR(ary))),
+                            NUM2INT(*(RARRAY_PTR(ary)+1)),
+                            NUM2INT(*(RARRAY_PTR(ary)+2)));
 
     return INT2FIX(c);
 }
@@ -595,9 +594,9 @@ img_color_closest_str(img, rgbstr)
 
     ary = hex2triplet(rgbstr);
     c = gdImageColorClosest(im,
-                            NUM2INT(*(RARRAY(ary)->ptr)),
-                            NUM2INT(*(RARRAY(ary)->ptr+1)),
-                            NUM2INT(*(RARRAY(ary)->ptr+2)));
+                            NUM2INT(*(RARRAY_PTR(ary))),
+                            NUM2INT(*(RARRAY_PTR(ary)+1)),
+                            NUM2INT(*(RARRAY_PTR(ary)+2)));
     return INT2FIX(c);
 }
 
@@ -657,9 +656,9 @@ img_color_closestHWB_str(img, rgbstr)
 
     ary = hex2triplet(rgbstr);
     c = gdImageColorClosestHWB(im,
-                               NUM2INT(*(RARRAY(ary)->ptr)),
-                               NUM2INT(*(RARRAY(ary)->ptr+1)),
-                               NUM2INT(*(RARRAY(ary)->ptr+2)));
+                               NUM2INT(*(RARRAY_PTR(ary))),
+                               NUM2INT(*(RARRAY_PTR(ary)+1)),
+                               NUM2INT(*(RARRAY_PTR(ary)+2)));
     return INT2FIX(c);
 }
 
@@ -717,9 +716,9 @@ img_color_exact_str(img, rgbstr)
 
     ary = hex2triplet(rgbstr);
     c = gdImageColorExact(im,
-                          NUM2INT(*(RARRAY(ary)->ptr)),
-                          NUM2INT(*(RARRAY(ary)->ptr+1)),
-                          NUM2INT(*(RARRAY(ary)->ptr+2)));
+                          NUM2INT(*(RARRAY_PTR(ary))),
+                          NUM2INT(*(RARRAY_PTR(ary)+1)),
+                          NUM2INT(*(RARRAY_PTR(ary)+2)));
     return INT2FIX(c);
 }
 
@@ -999,11 +998,11 @@ img_polygon(img, ply, c)
     Data_Get_Struct(img, gdImage, im);
 
     poly_req(ply);
-    len = ply->len/2;
+    len = RARRAY_LEN(ply)/2;
     pnt = ALLOCA_N(gdPoint, len);
     for (i=0; i<len; i++) {
-	pnt[i].x = NUM2INT(ply->ptr[i*2]);
-	pnt[i].y = NUM2INT(ply->ptr[i*2+1]);
+	pnt[i].x = NUM2INT(RARRAY_PTR(ply)[i*2]);
+	pnt[i].y = NUM2INT(RARRAY_PTR(ply)[i*2+1]);
     }
 
     gdImagePolygon(im, pnt, len, NUM2INT(c));
@@ -1024,11 +1023,11 @@ img_filled_polygon(img, ply, c)
     Data_Get_Struct(img, gdImage, im);
 
     poly_req(ply);
-    len = ply->len/2;
+    len = RARRAY_LEN(ply)/2;
     pnt = ALLOCA_N(gdPoint, len);
     for (i=0; i<len; i++) {
-	pnt[i].x = NUM2INT(ply->ptr[i*2]);
-	pnt[i].y = NUM2INT(ply->ptr[i*2+1]);
+	pnt[i].x = NUM2INT(RARRAY_PTR(ply)[i*2]);
+	pnt[i].y = NUM2INT(RARRAY_PTR(ply)[i*2+1]);
     }
 
     gdImageFilledPolygon(im, pnt, len, NUM2INT(c));
@@ -1199,7 +1198,7 @@ img_string(img, fnt, x, y, str, c)
     font_req(fnt);
     Data_Get_Struct(fnt, gdFont, f);
 
-    gdImageString(im,f,NUM2INT(x),NUM2INT(y),RSTRING(str)->ptr,NUM2INT(c));
+    gdImageString(im,f,NUM2INT(x),NUM2INT(y),(unsigned char*)RSTRING_PTR(str),NUM2INT(c));
 
     return img;
 }
@@ -1216,7 +1215,7 @@ img_string_up(img, fnt, x, y, str, c)
     font_req(fnt);
     Data_Get_Struct(fnt, gdFont, f);
 
-    gdImageStringUp(im,f,NUM2INT(x),NUM2INT(y),RSTRING(str)->ptr,NUM2INT(c));
+    gdImageStringUp(im,f,NUM2INT(x),NUM2INT(y),(unsigned char*)RSTRING_PTR(str),NUM2INT(c));
 
     return img;
 }
@@ -1237,12 +1236,12 @@ img_s_string_ttf(klass, fgcolor, fontname, ptsize, angle, x, y, string)
     msg = gdImageStringTTF(NULL,
                            &brect[0],
                            NUM2INT(fgcolor),
-                           RSTRING(fontname)->ptr,
+                           RSTRING_PTR(fontname),
                            NUM2DBL(ptsize),
                            NUM2DBL(angle),
                            NUM2INT(x),
                            NUM2INT(y),
-                           RSTRING(string)->ptr);
+                           RSTRING_PTR(string));
     for (i=0; i<8; i++) {
         rb_ary_push(ary, INT2FIX(brect[i]));
     }
@@ -1269,12 +1268,12 @@ img_string_ttf(img, fgcolor, fontname, ptsize, angle, x, y, string)
     msg = gdImageStringTTF(im,
                            &brect[0],
                            NUM2INT(fgcolor),
-                           RSTRING(fontname)->ptr,
+                           RSTRING_PTR(fontname),
                            NUM2DBL(ptsize),
                            NUM2DBL(angle),
                            NUM2INT(x),
                            NUM2INT(y),
-                           RSTRING(string)->ptr);
+                           RSTRING_PTR(string));
     for (i=0; i<8; i++) {
         rb_ary_push(ary, INT2FIX(brect[i]));
     }
@@ -1301,12 +1300,12 @@ img_s_string_ft(klass, fgcolor, fontname, ptsize, angle, x, y, string)
     msg = gdImageStringFT(NULL,
                            &brect[0],
                            NUM2INT(fgcolor),
-                           RSTRING(fontname)->ptr,
+                           RSTRING_PTR(fontname),
                            NUM2DBL(ptsize),
                            NUM2DBL(angle),
                            NUM2INT(x),
                            NUM2INT(y),
-                           RSTRING(string)->ptr);
+                           RSTRING_PTR(string));
     for (i=0; i<8; i++) {
         rb_ary_push(ary, INT2FIX(brect[i]));
     }
@@ -1333,12 +1332,12 @@ img_string_ft(img, fgcolor, fontname, ptsize, angle, x, y, string)
     msg = gdImageStringFT(im,
                            &brect[0],
                            NUM2INT(fgcolor),
-                           RSTRING(fontname)->ptr,
+                           RSTRING_PTR(fontname),
                            NUM2DBL(ptsize),
                            NUM2DBL(angle),
                            NUM2INT(x),
                            NUM2INT(y),
-                           RSTRING(string)->ptr);
+                           RSTRING_PTR(string));
     for (i=0; i<8; i++) {
         rb_ary_push(ary, INT2FIX(brect[i]));
     }
@@ -1363,10 +1362,10 @@ img_char(img, fnt, x, y, ch, c)
     Data_Get_Struct(fnt, gdFont, f);
     
     if (TYPE(ch) == T_STRING) {
-	if (RSTRING(ch)->len != 1) {
-	    rb_raise(rb_eArgError, "string must be 1 byte(%d bytes)", RSTRING(ch)->len);
+	if (RSTRING_LEN(ch) != 1) {
+	    rb_raise(rb_eArgError, "string must be 1 byte(%ld bytes)", RSTRING_LEN(ch));
 	}
-	ci = RSTRING(ch)->ptr[0];
+	ci = RSTRING_PTR(ch)[0];
     }
     else {
 	ci = NUM2INT(ch);
@@ -1389,10 +1388,10 @@ img_char_up(img, fnt, x, y, ch, c)
     Data_Get_Struct(fnt, gdFont, f);
 
     if (TYPE(ch) == T_STRING) {
-	if (RSTRING(ch)->len != 1) {
-	    rb_raise(rb_eArgError, "string must be 1 byte(%d bytes)", RSTRING(ch)->len);
+	if (RSTRING_LEN(ch) != 1) {
+	    rb_raise(rb_eArgError, "string must be 1 byte(%ld bytes)", RSTRING_LEN(ch));
 	}
-	ci = RSTRING(ch)->ptr[0];
+	ci = RSTRING_PTR(ch)[0];
     }
     else {
 	ci = NUM2INT(ch);
@@ -1498,7 +1497,7 @@ img_png(img, out)
     VALUE img, out;
 {
     gdImagePtr im;
-    OpenFile *fptr;
+    rb_io_t *fptr;
     FILE *f;
 
     Data_Get_Struct(img, gdImage, im);
@@ -1506,8 +1505,8 @@ img_png(img, out)
     rb_io_binmode(out);
     GetOpenFile(out, fptr);
     rb_io_check_writable(fptr);
-    f = (fptr->f2) ? fptr->f2 : fptr->f;
 
+    f = rb_io_stdio_file(fptr);
     gdImagePng(im, f);
 
     return img;
@@ -1542,7 +1541,7 @@ img_gif(img, out)
     VALUE img, out;
 {
     gdImagePtr im;
-    OpenFile *fptr;
+    rb_io_t *fptr;
     FILE *f;
 
     Data_Get_Struct(img, gdImage, im);
@@ -1550,7 +1549,7 @@ img_gif(img, out)
     rb_io_binmode(out);
     GetOpenFile(out, fptr);
     rb_io_check_writable(fptr);
-    f = (fptr->f2) ? fptr->f2 : fptr->f;
+    f = rb_io_stdio_file(fptr);
 
     gdImageGif(im, f);
 
@@ -1581,7 +1580,7 @@ img_gd(img, out)
     VALUE img, out;
 {
     gdImagePtr im;
-    OpenFile *fptr;
+    rb_io_t *fptr;
     FILE *f;
 
     Data_Get_Struct(img, gdImage, im);
@@ -1589,7 +1588,7 @@ img_gd(img, out)
     rb_io_binmode(out);
     GetOpenFile(out, fptr);
     rb_io_check_writable(fptr);
-    f = (fptr->f2) ? fptr->f2 : fptr->f;
+    f = rb_io_stdio_file(fptr);
 
     gdImageGd(im, f);
 
@@ -1600,7 +1599,7 @@ static VALUE
 img_gd2(img, out, cs, fmt)
     VALUE img, out, cs, fmt;
 {
-    OpenFile *fptr;
+    rb_io_t *fptr;
     gdImagePtr im;
     FILE *f;
 
@@ -1608,7 +1607,7 @@ img_gd2(img, out, cs, fmt)
     rb_io_binmode(out);
     GetOpenFile(out, fptr);
     rb_io_check_writable(fptr);
-    f = (fptr->f2) ? fptr->f2 : fptr->f;
+    f = rb_io_stdio_file(fptr);
 
     Data_Get_Struct(img, gdImage, im);
     gdImageGd2(im, f, NUM2INT(cs), NUM2INT(fmt));
@@ -1623,7 +1622,7 @@ img_jpeg(img, out, quality)
     VALUE img, out, quality;
 {
     gdImagePtr im;
-    OpenFile *fptr;
+    rb_io_t *fptr;
     FILE *f;
 
     Data_Get_Struct(img, gdImage, im);
@@ -1633,7 +1632,7 @@ img_jpeg(img, out, quality)
     rb_io_binmode(out);
     GetOpenFile(out, fptr);
     rb_io_check_writable(fptr);
-    f = (fptr->f2) ? fptr->f2 : fptr->f;
+    f = rb_io_stdio_file(fptr);
 
     gdImageJpeg(im, f, FIX2INT(quality));
 
@@ -1668,7 +1667,7 @@ img_wbmp(img, fg, out)
     VALUE img, out, fg;
 {
     gdImagePtr im;
-    OpenFile *fptr;
+    rb_io_t *fptr;
     FILE *f;
 
     Data_Get_Struct(img, gdImage, im);
@@ -1678,7 +1677,7 @@ img_wbmp(img, fg, out)
     rb_io_binmode(out);
     GetOpenFile(out, fptr);
     rb_io_check_writable(fptr);
-    f = (fptr->f2) ? fptr->f2 : fptr->f;
+    f = rb_io_stdio_file(fptr);
 
     gdImageWBMP(im, FIX2INT(fg), f);
 
@@ -1724,9 +1723,9 @@ ply_to_pt(ply, dx, dy)
     NUM2INT(dx);
     NUM2INT(dy);
 
-    if (RARRAY(ply)->len > 0) {
-        x = rb_ary_entry(ply, RARRAY(ply)->len - 2);
-        y = rb_ary_entry(ply, RARRAY(ply)->len - 1);
+    if (RARRAY_LEN(ply) > 0) {
+        x = rb_ary_entry(ply, RARRAY_LEN(ply) - 2);
+        y = rb_ary_entry(ply, RARRAY_LEN(ply) - 1);
         rb_ary_push(ply, INT2NUM(NUM2INT(x) + NUM2INT(dx)));
         rb_ary_push(ply, INT2NUM(NUM2INT(y) + NUM2INT(dy)));
     } else {
@@ -1741,7 +1740,7 @@ ply_get_pt(ply, idx)
 {
     int i = NUM2INT(idx);
 
-    if (RARRAY(ply)->len < idx) return Qnil;
+    if (RARRAY_LEN(ply) < idx) return Qnil;
     i *= 2;
 
     return rb_assoc_new(rb_ary_entry(ply, i), rb_ary_entry(ply, i+1));
@@ -1779,7 +1778,7 @@ static VALUE
 ply_length(ply)
     VALUE ply;
 {
-    return INT2FIX(RARRAY(ply)->len / 2);
+    return INT2FIX(RARRAY_LEN(ply) / 2);
 }
 
 static VALUE
@@ -1787,10 +1786,10 @@ ply_vertices(ply)
     struct RArray *ply;
 {
     int i;
-    VALUE ary = rb_ary_new2(ply->len/2);
+    VALUE ary = rb_ary_new2(RARRAY_LEN(ply)/2);
 
-    for (i = 0; i<ply->len; i+=2) {
-	rb_ary_push(ary, rb_assoc_new(ply->ptr[i], ply->ptr[i+1]));
+    for (i = 0; i<RARRAY_LEN(ply); i+=2) {
+	rb_ary_push(ary, rb_assoc_new(RARRAY_PTR(ply)[i], RARRAY_PTR(ply)[i+1]));
     }
     return ary;
 }
@@ -1802,18 +1801,18 @@ ply_bounds(ply)
     int i, l, t, r, b;
     int nx, ny;
 
-    if (ply->len == 0) {
+    if (RARRAY_LEN(ply) == 0) {
 	l = t = r = b = 0;
     }
     else {
-	l = r = NUM2INT(ply->ptr[0]);
-	t = b = NUM2INT(ply->ptr[1]);
+	l = r = NUM2INT(RARRAY_PTR(ply)[0]);
+	t = b = NUM2INT(RARRAY_PTR(ply)[1]);
     }
-    for (i = 2; i<ply->len; i+=2) {
-	nx = NUM2INT(ply->ptr[i]);
+    for (i = 2; i<RARRAY_LEN(ply); i+=2) {
+	nx = NUM2INT(RARRAY_PTR(ply)[i]);
 	if (nx < l) l = nx;
 	if (nx > r) r = nx;
-	ny = NUM2INT(ply->ptr[i+1]);
+	ny = NUM2INT(RARRAY_PTR(ply)[i+1]);
 	if (ny < t) t = ny;
 	if (ny > b) b = ny;
     }
@@ -1830,11 +1829,11 @@ ply_offset(ply, vx, vy)
     x = NUM2INT(vx);
     y = NUM2INT(vy);
 
-    for (i = 0; i<ply->len; i+=2) {
-	c = NUM2INT(ply->ptr[i]) + x;
-	ply->ptr[i] = INT2FIX(c);
-	c = NUM2INT(ply->ptr[i+1]) + y;
-	ply->ptr[i+1] = INT2FIX(c);
+    for (i = 0; i<RARRAY_LEN(ply); i+=2) {
+	c = NUM2INT(RARRAY_PTR(ply)[i]) + x;
+	RARRAY_PTR(ply)[i] = INT2FIX(c);
+	c = NUM2INT(RARRAY_PTR(ply)[i+1]) + y;
+	RARRAY_PTR(ply)[i+1] = INT2FIX(c);
     }
 
     return (VALUE)ply;
@@ -1857,18 +1856,18 @@ ply_map(argc, argv, ply)
 	int i, l, t, r, b;
 	int nx, ny;
 
-	if (ply->len == 0) {
+	if (RARRAY_LEN(ply) == 0) {
 	    l = t = r = b = 0;
 	}
 	else {
-	    l = r = NUM2INT(ply->ptr[0]);
-	    t = b = NUM2INT(ply->ptr[1]);
+	    l = r = NUM2INT(RARRAY_PTR(ply)[0]);
+	    t = b = NUM2INT(RARRAY_PTR(ply)[1]);
 	}
-	for (i = 2; i<ply->len; i+=2) {
-	    nx = NUM2INT(ply->ptr[i]);
+	for (i = 2; i<RARRAY_LEN(ply); i+=2) {
+	    nx = NUM2INT(RARRAY_PTR(ply)[i]);
 	    if (nx < l) l = nx;
 	    if (nx > r) r = nx;
-	    ny = NUM2INT(ply->ptr[i+1]);
+	    ny = NUM2INT(RARRAY_PTR(ply)[i+1]);
 	    if (ny < t) t = ny;
 	    if (ny > b) b = ny;
 	}
@@ -1893,14 +1892,14 @@ ply_map(argc, argv, ply)
 	rb_raise(rb_eArgError, "wrong # of arguments (%d for 4 or 8)", argc);
     }
 
-    for (i = 0; i<ply->len; i+=2) {
-	c = NUM2INT(ply->ptr[i]);
+    for (i = 0; i<RARRAY_LEN(ply); i+=2) {
+	c = NUM2INT(RARRAY_PTR(ply)[i]);
 	c = (c-sx)*xmag+dx;
-	ply->ptr[i] = INT2FIX(c);
+	RARRAY_PTR(ply)[i] = INT2FIX(c);
 
-	c = NUM2INT(ply->ptr[i+1]);
+	c = NUM2INT(RARRAY_PTR(ply)[i+1]);
 	c = (c-sy)*ymag+dy;
-	ply->ptr[i+1] = INT2FIX(c);
+	RARRAY_PTR(ply)[i+1] = INT2FIX(c);
     }
 
     return (VALUE)ply;
@@ -1913,11 +1912,11 @@ ply_transform(ply, a, b, c, d, tx, ty)
     int i;
     VALUE x, y;
 
-    for (i = 0; i < RARRAY(ply)->len / 2; i++) {
+    for (i = 0; i < RARRAY_LEN(ply) / 2; i++) {
 /*      x = rb_ary_entry(ply, i * 2);
         y = rb_ary_entry(ply, i * 2 + 1);*/
-        x = RARRAY(ply)->ptr[i * 2];
-        y = RARRAY(ply)->ptr[i * 2 + 1];
+        x = RARRAY_PTR(ply)[i * 2];
+        y = RARRAY_PTR(ply)[i * 2 + 1];
         ply_set_pt(ply, INT2NUM(i),
                 INT2NUM(NUM2DBL(a) * NUM2INT(x) + NUM2DBL(c) * NUM2INT(y) + NUM2INT(tx)),
                 INT2NUM(NUM2DBL(b) * NUM2INT(x) + NUM2DBL(d) * NUM2INT(y) + NUM2INT(ty)));
@@ -1967,7 +1966,7 @@ fnt_s_new(obj, name)
     struct RString *name;
 {
     Check_Type(name, T_STRING);
-    return fnt_new(name->ptr);
+    return fnt_new(RSTRING_PTR(name));
 }
 
 static VALUE
@@ -2059,9 +2058,9 @@ img_color_allocate_alpha_str(img, rgbstr, a)
     
     ary = hex2triplet(rgbstr);
     c = gdImageColorAllocateAlpha(im,
-                                  NUM2INT(*(RARRAY(ary)->ptr)),
-                                  NUM2INT(*(RARRAY(ary)->ptr+1)),
-                                  NUM2INT(*(RARRAY(ary)->ptr+2)),
+                                  NUM2INT(*(RARRAY_PTR(ary))),
+                                  NUM2INT(*(RARRAY_PTR(ary)+1)),
+                                  NUM2INT(*(RARRAY_PTR(ary)+2)),
                                   NUM2INT(a));
     return INT2NUM(c);
 }
@@ -2121,9 +2120,9 @@ img_color_resolve_alpha_str(img, rgbstr, a)
     
     ary = hex2triplet(rgbstr);
     c = gdImageColorResolveAlpha(im,
-                                 NUM2INT(*(RARRAY(ary)->ptr)),
-                                 NUM2INT(*(RARRAY(ary)->ptr+1)),
-                                 NUM2INT(*(RARRAY(ary)->ptr+2)),
+                                 NUM2INT(*(RARRAY_PTR(ary))),
+                                 NUM2INT(*(RARRAY_PTR(ary)+1)),
+                                 NUM2INT(*(RARRAY_PTR(ary)+2)),
                                  NUM2INT(a));
     return INT2NUM(c);
 }
@@ -2182,9 +2181,9 @@ img_color_closest_alpha_str(img, rgbstr, a)
     
     ary = hex2triplet(rgbstr);
     c = gdImageColorClosestAlpha(im,
-                                 NUM2INT(*(RARRAY(ary)->ptr)),
-                                 NUM2INT(*(RARRAY(ary)->ptr+1)),
-                                 NUM2INT(*(RARRAY(ary)->ptr+2)),
+                                 NUM2INT(*(RARRAY_PTR(ary))),
+                                 NUM2INT(*(RARRAY_PTR(ary)+1)),
+                                 NUM2INT(*(RARRAY_PTR(ary)+2)),
                                  NUM2INT(a));
     return INT2NUM(c);
 }
@@ -2244,9 +2243,9 @@ img_color_exact_alpha_str(img, rgbstr, a)
     
     ary = hex2triplet(rgbstr);
     c = gdImageColorExactAlpha(im,
-                                 NUM2INT(*(RARRAY(ary)->ptr)),
-                                 NUM2INT(*(RARRAY(ary)->ptr+1)),
-                                 NUM2INT(*(RARRAY(ary)->ptr+2)),
+                                 NUM2INT(*(RARRAY_PTR(ary))),
+                                 NUM2INT(*(RARRAY_PTR(ary)+1)),
+                                 NUM2INT(*(RARRAY_PTR(ary)+2)),
                                  NUM2INT(a));
     return INT2NUM(c);
 }
@@ -2310,9 +2309,9 @@ img_s_truecolor_str(rgbstr)
     int c;
     VALUE ary;
     ary = hex2triplet(rgbstr);
-    c = gdTrueColor(NUM2INT(*(RARRAY(ary)->ptr)),
-                    NUM2INT(*(RARRAY(ary)->ptr+1)),
-                    NUM2INT(*(RARRAY(ary)->ptr+2)));
+    c = gdTrueColor(NUM2INT(*(RARRAY_PTR(ary))),
+                    NUM2INT(*(RARRAY_PTR(ary)+1)),
+                    NUM2INT(*(RARRAY_PTR(ary)+2)));
     
     return INT2NUM(c);
 }
@@ -2364,9 +2363,9 @@ img_s_truecolor_alpha_str(rgbstr, a)
     int c;
     VALUE ary;
     ary = hex2triplet(rgbstr);
-    c = gdTrueColorAlpha(NUM2INT(*(RARRAY(ary)->ptr)),
-                         NUM2INT(*(RARRAY(ary)->ptr+1)),
-                         NUM2INT(*(RARRAY(ary)->ptr+2)),
+    c = gdTrueColorAlpha(NUM2INT(*(RARRAY_PTR(ary))),
+                         NUM2INT(*(RARRAY_PTR(ary)+1)),
+                         NUM2INT(*(RARRAY_PTR(ary)+2)),
                          NUM2INT(a));
     return INT2NUM(c);
 }
