@@ -10,7 +10,11 @@
   $Revision: 1.6.2.3 $
 **************************************************************/
 #include "ruby.h"
-#include "ruby/io.h"
+#if defined(HAVE_RUBY_IO_H)
+        #include "ruby/io.h"
+#else /* seems like Ruby < 1.9 */
+        #include "rubyio.h"
+#endif
 
 #include "gd.h"
 #include "gdfontg.h"		/* giant */
@@ -18,6 +22,22 @@
 #include "gdfontmb.h"		/* medium bold */
 #include "gdfonts.h"		/* small */
 #include "gdfontt.h"		/* tiny */
+
+/* Is this the best way to do this sort of thing?
+ * It feels kind of wrong, but I'm not sure of the (Ruby)C way.
+ * Any opinions on the style will be gratefully received! */
+
+#if defined(HAVE_RUBY_IO_H) /* seems like Ruby > 1.8 */
+        #define FPTR_TYPE rb_io_t
+        #define FILE_POINTER_FOR_CREATE_FROM fdopen(fptr->fd, "r")
+        #define FPTR_PATH (char*)fptr->pathv
+        #define SECOND_FILE_POINTER rb_io_stdio_file(fptr)
+#else
+        #define FPTR_TYPE OpenFile
+        #define FILE_POINTER_FOR_CREATE_FROM fptr->f
+        #define FPTR_PATH fptr->path
+        #define SECOND_FILE_POINTER (fptr->f2) ? fptr->f2 : fptr->f
+#endif
 
 extern VALUE rb_io_binmode(VALUE io);
 extern gdImagePtr gdImageCreateFromXpm(char* );
@@ -61,7 +81,7 @@ img_from_pngfname(klass, fname)
     VALUE klass, fname;
 {
     VALUE f;
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -71,9 +91,9 @@ img_from_pngfname(klass, fname)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromPng(fdopen(fptr->fd, "r"));
+    iptr = gdImageCreateFromPng(FILE_POINTER_FOR_CREATE_FROM);
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid PNG File", (char*)fptr->pathv);
+        rb_raise(rb_eArgError, "%s is not a valid PNG File", FPTR_PATH);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -83,7 +103,7 @@ static VALUE
 img_from_png(klass, f)
     VALUE klass, f;
 {
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE); 
@@ -91,9 +111,9 @@ img_from_png(klass, f)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromPng(fdopen(fptr->fd, "r"));
+    iptr = gdImageCreateFromPng(FILE_POINTER_FOR_CREATE_FROM);
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid PNG File", (char*)fptr->pathv);
+        rb_raise(rb_eArgError, "%s is not a valid PNG File", FPTR_PATH);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -104,7 +124,7 @@ img_from_giffname(klass, fname)
     VALUE klass, fname;
 {
     VALUE f;
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -114,9 +134,9 @@ img_from_giffname(klass, fname)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGif(fdopen(fptr->fd, "r"));
+    iptr = gdImageCreateFromGif(FILE_POINTER_FOR_CREATE_FROM);
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid GIF File", (char*)fptr->pathv);
+        rb_raise(rb_eArgError, "%s is not a valid GIF File", FPTR_PATH);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -125,7 +145,7 @@ static VALUE
 img_from_gif(klass, f)
     VALUE klass, f;
 {
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE); 
@@ -133,9 +153,9 @@ img_from_gif(klass, f)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGif(fdopen(fptr->fd, "r"));
+    iptr = gdImageCreateFromGif(FILE_POINTER_FOR_CREATE_FROM);
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid GIF File", (char*)fptr->pathv);
+        rb_raise(rb_eArgError, "%s is not a valid GIF File", FPTR_PATH);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -146,7 +166,7 @@ img_from_gdfname(klass, fname)
     VALUE klass, fname;
 {
     VALUE f;
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -156,9 +176,9 @@ img_from_gdfname(klass, fname)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGd(fdopen(fptr->fd, "r"));
+    iptr = gdImageCreateFromGd(FILE_POINTER_FOR_CREATE_FROM);
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Gd File", (char*)fptr->pathv);
+        rb_raise(rb_eArgError, "%s is not a valid Gd File", FPTR_PATH);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -167,7 +187,7 @@ static VALUE
 img_from_gd(klass, f)
     VALUE klass, f;
 {
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE); 
@@ -175,9 +195,9 @@ img_from_gd(klass, f)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGd(fdopen(fptr->fd, "r"));
+    iptr = gdImageCreateFromGd(FILE_POINTER_FOR_CREATE_FROM);
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Gd File", (char*)fptr->pathv);
+        rb_raise(rb_eArgError, "%s is not a valid Gd File", FPTR_PATH);
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
 
@@ -186,7 +206,7 @@ img_from_gd2fname(klass, fname)
     VALUE klass, fname;
 {
     VALUE f;
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -196,9 +216,9 @@ img_from_gd2fname(klass, fname)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGd2(fdopen(fptr->fd, "r"));
+    iptr = gdImageCreateFromGd2(FILE_POINTER_FOR_CREATE_FROM);
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", (char*)fptr->pathv);
+        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", FPTR_PATH);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -207,7 +227,7 @@ static VALUE
 img_from_gd2(klass, f)
     VALUE klass, f;
 {
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE);
@@ -215,9 +235,9 @@ img_from_gd2(klass, f)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGd2(fdopen(fptr->fd, "r"));
+    iptr = gdImageCreateFromGd2(FILE_POINTER_FOR_CREATE_FROM);
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", (char*)fptr->pathv);
+        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", FPTR_PATH);
     
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -227,7 +247,7 @@ img_from_gd2_partfname(klass, fname, srcx, srcy, w, h)
     VALUE klass, fname, srcx, srcy, w, h;
 {
     VALUE f;
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -237,10 +257,10 @@ img_from_gd2_partfname(klass, fname, srcx, srcy, w, h)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGd2Part(fdopen(fptr->fd, "r"), NUM2INT(srcx),
+    iptr = gdImageCreateFromGd2Part(FILE_POINTER_FOR_CREATE_FROM, NUM2INT(srcx),
                                     NUM2INT(srcy), NUM2INT(w), NUM2INT(h));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", (char*)fptr->pathv);
+        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", FPTR_PATH);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -249,7 +269,7 @@ static VALUE
 img_from_gd2_part(klass, f, srcx, srcy, w, h)
     VALUE klass, f, srcx, srcy, w, h;
 {
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE);
@@ -257,10 +277,10 @@ img_from_gd2_part(klass, f, srcx, srcy, w, h)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromGd2Part(fdopen(fptr->fd, "r"), NUM2INT(srcx),
+    iptr = gdImageCreateFromGd2Part(FILE_POINTER_FOR_CREATE_FROM, NUM2INT(srcx),
                                    NUM2INT(srcy), NUM2INT(w), NUM2INT(h));
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", (char*)fptr->pathv);
+        rb_raise(rb_eArgError, "%s is not a valid Gd2 File", FPTR_PATH);
     
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -270,7 +290,7 @@ static VALUE
 img_from_xbm(klass, f)
     VALUE klass, f;
 {
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE); 
@@ -278,9 +298,9 @@ img_from_xbm(klass, f)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromXbm(fdopen(fptr->fd, "r"));
+    iptr = gdImageCreateFromXbm(FILE_POINTER_FOR_CREATE_FROM);
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Xbm File", (char*)fptr->pathv);
+        rb_raise(rb_eArgError, "%s is not a valid Xbm File", FPTR_PATH);
 
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -290,7 +310,7 @@ img_from_xbmfname(klass, fname)
     VALUE klass, fname;
 {
     VALUE f;
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -300,9 +320,9 @@ img_from_xbmfname(klass, fname)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromXbm(fdopen(fptr->fd, "r"));
+    iptr = gdImageCreateFromXbm(FILE_POINTER_FOR_CREATE_FROM);
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Xbm File", (char*)fptr->pathv);
+        rb_raise(rb_eArgError, "%s is not a valid Xbm File", FPTR_PATH);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -312,7 +332,7 @@ static VALUE
 img_from_xpm(klass, f)
     VALUE klass, f;
 {
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE);
@@ -333,7 +353,7 @@ img_from_xpmfname(klass, fname)
     VALUE klass, fname;
 {
     VALUE f;
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -358,7 +378,7 @@ static VALUE
 img_from_jpeg(klass, f)
     VALUE klass, f;
 {
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
 
     Check_Type(f, T_FILE);
@@ -366,9 +386,9 @@ img_from_jpeg(klass, f)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
     
-    iptr = gdImageCreateFromJpeg(fdopen(fptr->fd, "r"));
+    iptr = gdImageCreateFromJpeg(FILE_POINTER_FOR_CREATE_FROM);
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Jpeg File", (char*)fptr->pathv);
+        rb_raise(rb_eArgError, "%s is not a valid Jpeg File", FPTR_PATH);
 
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -378,7 +398,7 @@ img_from_jpegfname(klass, fname)
     VALUE klass, fname;
 {
     VALUE f;
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr iptr;
     
     Check_Type(fname, T_STRING);
@@ -388,9 +408,9 @@ img_from_jpegfname(klass, fname)
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
 
-    iptr = gdImageCreateFromJpeg(fdopen(fptr->fd, "r"));
+    iptr = gdImageCreateFromJpeg(FILE_POINTER_FOR_CREATE_FROM);
     if (!iptr)
-        rb_raise(rb_eArgError, "%s is not a valid Jpeg File", (char*)fptr->pathv);
+        rb_raise(rb_eArgError, "%s is not a valid Jpeg File", FPTR_PATH);
                  
     return Data_Wrap_Struct(klass,0,free_img,iptr);
 }
@@ -1497,7 +1517,7 @@ img_png(img, out)
     VALUE img, out;
 {
     gdImagePtr im;
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     FILE *f;
 
     Data_Get_Struct(img, gdImage, im);
@@ -1506,7 +1526,7 @@ img_png(img, out)
     GetOpenFile(out, fptr);
     rb_io_check_writable(fptr);
 
-    f = rb_io_stdio_file(fptr);
+    f = SECOND_FILE_POINTER;
     gdImagePng(im, f);
 
     return img;
@@ -1541,7 +1561,7 @@ img_gif(img, out)
     VALUE img, out;
 {
     gdImagePtr im;
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     FILE *f;
 
     Data_Get_Struct(img, gdImage, im);
@@ -1580,7 +1600,7 @@ img_gd(img, out)
     VALUE img, out;
 {
     gdImagePtr im;
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     FILE *f;
 
     Data_Get_Struct(img, gdImage, im);
@@ -1588,7 +1608,7 @@ img_gd(img, out)
     rb_io_binmode(out);
     GetOpenFile(out, fptr);
     rb_io_check_writable(fptr);
-    f = rb_io_stdio_file(fptr);
+    f = SECOND_FILE_POINTER;
 
     gdImageGd(im, f);
 
@@ -1599,7 +1619,7 @@ static VALUE
 img_gd2(img, out, cs, fmt)
     VALUE img, out, cs, fmt;
 {
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     gdImagePtr im;
     FILE *f;
 
@@ -1607,7 +1627,7 @@ img_gd2(img, out, cs, fmt)
     rb_io_binmode(out);
     GetOpenFile(out, fptr);
     rb_io_check_writable(fptr);
-    f = rb_io_stdio_file(fptr);
+    f = SECOND_FILE_POINTER;
 
     Data_Get_Struct(img, gdImage, im);
     gdImageGd2(im, f, NUM2INT(cs), NUM2INT(fmt));
@@ -1622,7 +1642,7 @@ img_jpeg(img, out, quality)
     VALUE img, out, quality;
 {
     gdImagePtr im;
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     FILE *f;
 
     Data_Get_Struct(img, gdImage, im);
@@ -1632,7 +1652,7 @@ img_jpeg(img, out, quality)
     rb_io_binmode(out);
     GetOpenFile(out, fptr);
     rb_io_check_writable(fptr);
-    f = rb_io_stdio_file(fptr);
+    f = SECOND_FILE_POINTER;
 
     gdImageJpeg(im, f, FIX2INT(quality));
 
@@ -1667,7 +1687,7 @@ img_wbmp(img, fg, out)
     VALUE img, out, fg;
 {
     gdImagePtr im;
-    rb_io_t *fptr;
+    FPTR_TYPE *fptr;
     FILE *f;
 
     Data_Get_Struct(img, gdImage, im);
@@ -1677,7 +1697,7 @@ img_wbmp(img, fg, out)
     rb_io_binmode(out);
     GetOpenFile(out, fptr);
     rb_io_check_writable(fptr);
-    f = rb_io_stdio_file(fptr);
+    f = SECOND_FILE_POINTER;
 
     gdImageWBMP(im, FIX2INT(fg), f);
 

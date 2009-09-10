@@ -24,7 +24,11 @@ end
 
 dir_config("gd", "/usr/local/include", "/usr/local/lib")
 
+have_header('ruby/io.h')
 
+if have_type("rb_io_t", ["ruby.h", "rubyio.h"])
+  have_struct_member("rb_io_t", "fd", ["ruby.h", "rubyio.h"])
+end
 
 if with_config("xpm")
   dir_config("X11", "/usr/X11R6/include", "/usr/X11R6/lib")
