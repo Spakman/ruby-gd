@@ -29,7 +29,7 @@
 
 #if defined(HAVE_RUBY_IO_H) /* seems like Ruby > 1.8 */
         #define FPTR_TYPE rb_io_t
-        #define FILE_POINTER_FOR_CREATE_FROM fdopen(fptr->fd, "r")
+        #define FILE_POINTER_FOR_CREATE_FROM rb_io_stdio_file(fptr)
         #define FPTR_PATH (char*)fptr->pathv
         #define SECOND_FILE_POINTER rb_io_stdio_file(fptr)
 #else
