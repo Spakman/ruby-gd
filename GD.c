@@ -86,7 +86,7 @@ img_from_pngfname(klass, fname)
     
     Check_Type(fname, T_STRING);
 
-    f = rb_file_open(STR2CSTR(fname), "r");
+    f = rb_file_open(StringValuePtr(fname), "r");
     rb_io_binmode(f);
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
@@ -129,7 +129,7 @@ img_from_giffname(klass, fname)
     
     Check_Type(fname, T_STRING);
 
-    f = rb_file_open(STR2CSTR(fname), "r");
+    f = rb_file_open(StringValuePtr(fname), "r");
     rb_io_binmode(f);
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
@@ -171,7 +171,7 @@ img_from_gdfname(klass, fname)
     
     Check_Type(fname, T_STRING);
 
-    f = rb_file_open(STR2CSTR(fname), "r");
+    f = rb_file_open(StringValuePtr(fname), "r");
     rb_io_binmode(f);
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
@@ -211,7 +211,7 @@ img_from_gd2fname(klass, fname)
     
     Check_Type(fname, T_STRING);
 
-    f = rb_file_open(STR2CSTR(fname), "r");
+    f = rb_file_open(StringValuePtr(fname), "r");
     rb_io_binmode(f);
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
@@ -252,7 +252,7 @@ img_from_gd2_partfname(klass, fname, srcx, srcy, w, h)
     
     Check_Type(fname, T_STRING);
 
-    f = rb_file_open(STR2CSTR(fname), "r");
+    f = rb_file_open(StringValuePtr(fname), "r");
     rb_io_binmode(f);
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
@@ -315,7 +315,7 @@ img_from_xbmfname(klass, fname)
     
     Check_Type(fname, T_STRING);
 
-    f = rb_file_open(STR2CSTR(fname), "r");
+    f = rb_file_open(StringValuePtr(fname), "r");
     rb_io_binmode(f);
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
@@ -358,7 +358,7 @@ img_from_xpmfname(klass, fname)
     
     Check_Type(fname, T_STRING);
 
-    f = rb_file_open(STR2CSTR(fname), "r");
+    f = rb_file_open(StringValuePtr(fname), "r");
     rb_io_binmode(f);
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
@@ -403,7 +403,7 @@ img_from_jpegfname(klass, fname)
     
     Check_Type(fname, T_STRING);
 
-    f = rb_file_open(STR2CSTR(fname), "r");
+    f = rb_file_open(StringValuePtr(fname), "r");
     rb_io_binmode(f);
     GetOpenFile(f, fptr);
     rb_io_check_readable(fptr);
