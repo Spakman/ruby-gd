@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.homepage   = "http://tam.0xfa.com/ruby-gd"
   s.platform   = Gem::Platform::RUBY
   s.summary    = "An interface to Boutell GD library"
-  s.files      = FileList["Changes", "extconf.rb", "GD.c", "readme.*", "{doc,sample}/**/*"].exclude("rdoc").to_a
+  s.files      = ["Changes", "extconf.rb", "GD.c"] + Dir.glob("readme.*") + Dir.glob("{doc,sample}/**/*")
   s.require_path      = "lib"
   s.extensions        = "extconf.rb"
   s.autorequire       = "GD"
